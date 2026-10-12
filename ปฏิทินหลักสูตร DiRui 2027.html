@@ -1,0 +1,758 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ปฏิทินหลักสูตร DiRui 2027</title>
+<style>
+/* Layout: month tabs on top, then a Monday–Sunday calendar grid (like the original sheet) with course runs colored by level; below it a plain list of the month's runs. Phones show the list and a compact grid. */
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --fg:#1b2330; --muted:#5d6878; --line:#dde2ea; --cell:#f0f2f6;
+  --c1:#2a78d6; --c2:#eb6834; --bad:#b3261e; --tint:20%; --accent:#1f3a5f;
+  --t-cut:#2a78d6; --t-perm:#eb6834; --t-color:#e87ba4; --t-style:#6250d6; --t-media:#008300; --t-mix:#1baf7a;
+  --font-display:'Prompt','Noto Sans Thai',sans-serif; --font-body:'Sarabun','Noto Sans Thai',sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12161d; --card:#1b212b; --fg:#e8ecf2; --muted:#9aa5b5; --line:#2c3441; --cell:#232a35;
+  --c1:#3987e5; --c2:#d95926; --bad:#ff7a70; --tint:32%; --accent:#cfe0f7;
+  --t-cut:#3987e5; --t-perm:#d95926; --t-color:#d55181; --t-style:#9085e9; --t-media:#008300; --t-mix:#199e70; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161d; --card:#1b212b; --fg:#e8ecf2; --muted:#9aa5b5; --line:#2c3441; --cell:#232a35;
+  --c1:#3987e5; --c2:#d95926; --bad:#ff7a70; --tint:32%; --accent:#cfe0f7;
+  --t-cut:#3987e5; --t-perm:#d95926; --t-color:#d55181; --t-style:#9085e9; --t-media:#008300; --t-mix:#199e70; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.5;padding-inline:16px;padding-block:24px 48px}
+.wrap{max-width:1040px;margin:0 auto}
+h1{font-family:var(--font-display);font-weight:600;font-size:clamp(1.5rem,4.5vw,2.1rem);line-height:1.2;margin:0;text-wrap:balance}
+.zh{font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif}
+.sub{color:var(--muted);margin:6px 0 0}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px;margin-top:14px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.mb,.lv{font:inherit;font-size:.88rem;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--fg);border-radius:6px;padding:4px 10px}
+.mb{min-width:3.3rem}
+.mb[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.lv{border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+.lv i{width:11px;height:11px;border-radius:2px;background:var(--c,var(--muted))}
+.lv[aria-pressed="true"]{outline:2px solid var(--fg);outline-offset:1px}
+.mb:focus-visible,.lv:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;margin:20px 0 10px}
+.head h2{font-family:var(--font-display);font-weight:500;font-size:1.4rem;margin:0}
+.head span{color:var(--muted);font-size:.9rem}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.dow{text-align:center;font-size:.78rem;color:var(--muted);padding-bottom:2px}
+.dow small{display:block;font-size:.68rem}
+.d{min-height:84px;background:var(--cell);border-radius:6px;padding:5px 6px;position:relative;min-width:0;display:flex;flex-direction:column;gap:2px}
+.d .n{font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.d.on{background:color-mix(in srgb,var(--c) var(--tint),var(--card));border:1px solid var(--c)}
+.d.on .n{color:var(--fg);font-weight:600}
+.d .t{font-size:.76rem;line-height:1.25;font-weight:600;overflow-wrap:anywhere}
+.d .t small{display:block;font-weight:400;color:var(--muted);font-size:.66rem}
+.d.ho{border:1px dashed var(--bad);background:transparent}
+.d.ho .t{color:var(--bad)}
+.d.dim{opacity:.22}
+.d.empty{background:transparent}
+.list{margin:18px 0 0;display:grid;gap:8px}
+.it{display:grid;grid-template-columns:150px 1fr;gap:4px 12px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:8px;padding:10px 12px;min-width:0}
+.it.ho{border-left-color:var(--bad);border-style:dashed;border-left-style:dashed}
+.it .dt{font-weight:600;font-variant-numeric:tabular-nums}
+.it .dt small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+.it .nm{min-width:0}
+.it .nm b{font-weight:600}
+.it .nm>span:last-child{display:block;color:var(--muted);font-size:.85rem}
+.pill{display:inline-block;font-size:.7rem;border:1px solid var(--line);border-radius:999px;padding:0 8px;margin-left:8px;color:var(--muted);white-space:nowrap}
+.none{padding:22px;text-align:center;color:var(--muted);background:var(--card);border:1px dashed var(--line);border-radius:8px}
+.yr{display:grid;gap:18px}
+.yr h3{font-family:var(--font-display);font-weight:500;font-size:1.05rem;margin:0 0 6px}
+footer{margin-top:26px;color:var(--muted);font-size:.82rem}
+.ic{width:1.05em;height:1.05em;vertical-align:-.17em;margin-right:5px;fill:none;stroke:var(--c,currentColor);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.ic.big{width:1.25em;height:1.25em;vertical-align:-.25em;margin-right:7px}
+.lv.tp .ic{stroke:var(--c)}
+.lv.tp{border-color:var(--c)}
+.lv.tp[aria-pressed="true"]{background:color-mix(in srgb,var(--c) 22%,var(--card))}
+.d .gi{position:absolute;right:5px;top:5px;width:1.2em;height:1.2em;fill:none;stroke:var(--c);stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.tgs{display:flex!important;flex-wrap:wrap;gap:4px;margin:4px 0 2px}
+.tg{display:inline-block;font-size:.7rem;line-height:1.5;padding:0 8px;border-radius:999px;border:1px solid var(--c);background:color-mix(in srgb,var(--c) 18%,var(--card));color:var(--fg);white-space:nowrap}
+.tabs{display:flex;margin-top:16px;border-bottom:2px solid var(--line);overflow-x:auto}
+.tab{font:inherit;font-family:var(--font-display);font-weight:500;cursor:pointer;background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-2px;color:var(--muted);padding:8px 16px;white-space:nowrap}
+.tab[aria-pressed="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.pnote{margin:16px 0 0;color:var(--muted);font-size:.88rem;max-width:80ch}
+.pnote b{color:var(--fg);font-weight:600}
+.ph{font-family:var(--font-display);font-weight:500;font-size:1.1rem;margin:24px 0 8px}
+.ph small{color:var(--muted);font-weight:400;font-size:.8rem;margin-left:6px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+.pt{border-collapse:collapse;width:100%;min-width:640px;font-size:.88rem;font-variant-numeric:tabular-nums}
+.pt th{font-weight:600;font-size:.76rem;color:var(--muted);text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;vertical-align:bottom}
+.pt th small{display:block;font-weight:400}
+.pt td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.pt th:first-child,.pt td:first-child{text-align:left;white-space:normal;min-width:11rem}
+.pt tr:last-child td{border-bottom:0}
+.pt tr.lvrow td{background:var(--bg);font-weight:600;text-align:left;font-size:.82rem}
+.pt tr.sumrow td{font-weight:600;border-top:1px solid var(--fg)}
+.pt .big{font-weight:600}
+.pt .flag{color:var(--bad)}
+.pt td.l,.pt th.l{text-align:left;white-space:normal}
+.pt .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;background:var(--c)}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px}
+.sum div{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0}
+.sum b{display:block;font-family:var(--font-display);font-weight:500;font-size:1.2rem;font-variant-numeric:tabular-nums}
+.sum span{font-size:.78rem;color:var(--muted)}
+.xf{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:8px}
+.xf label{display:grid;gap:3px;font-size:.78rem;color:var(--muted);min-width:0}
+.xf input,.xf select{font:inherit;font-size:.92rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 8px;min-width:0;width:100%;box-sizing:border-box}
+.xf input:focus-visible,.xf select:focus-visible,.xf button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.xf button.go{font:inherit;cursor:pointer;background:var(--fg);color:var(--bg);border:0;border-radius:6px;padding:8px 14px;align-self:end}
+.xf button:disabled,.xf input:disabled,.xf select:disabled{opacity:.5;cursor:not-allowed}
+.xs{font-size:.85rem;color:var(--muted);min-height:1.3em;margin:6px 0 0}
+.xd{font:inherit;font-size:.78rem;cursor:pointer;background:none;border:1px solid var(--line);color:var(--muted);border-radius:6px;padding:2px 8px}
+.xd.arm{border-color:var(--bad);color:var(--bad)}
+.xo{font:inherit;font-weight:600;color:var(--fg);background:none;border:0;padding:2px 4px;margin:-2px -4px;cursor:pointer;text-align:left;border-radius:4px}
+.xo:hover{background:var(--bg)}
+.xo:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.xo .chev{display:inline-block;width:1em;color:var(--muted)}
+.pt tr.mrow.open td{background:var(--bg)}
+.pt tr.det td{padding:12px;background:var(--bg);text-align:left;white-space:normal;min-width:0}
+.dg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px}
+.dc{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0;display:grid;gap:4px;align-content:start}
+.dc.extra{border-color:var(--accent)}
+.dh{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.dh b{font-weight:600}
+.dh small{color:var(--muted)}
+.ir{display:flex;justify-content:space-between;gap:10px;font-size:.84rem}
+.ir>span:first-child{min-width:0}
+.ir>span:last-child{white-space:nowrap}
+.ir .zh{color:var(--muted);font-size:.9em}
+.na{color:var(--muted);font-size:.8em}
+.dt2{margin:8px 2px 0;font-size:.82rem;color:var(--muted)}
+.empty2{padding:18px;color:var(--muted);text-align:center;font-size:.9rem}
+details.dd{margin-top:16px}
+details.dd summary{cursor:pointer;font-family:var(--font-display);font-weight:500}
+@media (max-width:640px){
+  .d{min-height:46px;padding:3px}
+  .d .t{display:none}
+  .it{grid-template-columns:1fr}
+}
+#v-exec h2{font-family:var(--font-display);font-weight:500;font-size:1.2rem;margin:0 0 4px;text-wrap:balance}
+#v-exec .zh,#v-exec .sub{color:var(--muted)}
+#v-exec .zh{font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',sans-serif;font-size:.85em;margin-left:6px;font-weight:400}
+#v-exec .sub{margin:6px 0 0;max-width:70ch}
+#v-exec .q{margin:0 0 12px;color:var(--muted);font-size:.92rem;max-width:70ch}
+#v-exec .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+#v-exec .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+#v-exec .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+#v-exec .kpi b{display:block;font-family:var(--font-display);font-weight:600;font-size:clamp(1.5rem,4vw,2rem);line-height:1.15;font-variant-numeric:tabular-nums}
+#v-exec .kpi span{font-size:.85rem;color:var(--muted)}
+#v-exec .kpi.hero{border-color:var(--fg)}
+#v-exec .msgs{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+#v-exec .msgs li{padding-left:14px;border-left:3px solid var(--line)}
+#v-exec .msgs b{font-weight:600}
+#v-exec .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.85rem;color:var(--muted);margin-bottom:8px}
+#v-exec .legend i{display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:-1px;margin-right:6px}
+#v-exec .legend i.ln{height:3px;width:16px;border-radius:0;vertical-align:3px;background:var(--ink)}
+#v-exec svg{display:block;width:100%;height:auto;overflow:visible}
+#v-exec svg text{font-family:var(--font-body);fill:var(--muted);font-size:11px}
+#v-exec svg text.pct{fill:var(--fg);font-size:11px;font-weight:600}
+#v-exec .tw{overflow-x:auto}
+#v-exec table{border-collapse:collapse;width:100%;font-size:.85rem;font-variant-numeric:tabular-nums;min-width:520px}
+#v-exec th,#v-exec td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+#v-exec th:first-child,#v-exec td:first-child{text-align:left}
+#v-exec th{color:var(--muted);font-weight:600}
+#v-exec details{margin-top:10px;font-size:.88rem}
+#v-exec summary{cursor:pointer;color:var(--muted)}
+#v-exec .bars{display:grid;gap:8px}
+#v-exec .br{display:grid;grid-template-columns:minmax(120px,210px) 1fr auto;gap:10px;align-items:center;font-size:.9rem}
+#v-exec .br .nm{min-width:0}
+#v-exec .br .nm small{display:block;color:var(--muted);font-size:.75rem}
+#v-exec .br .tr{height:16px;background:var(--grid);border-radius:3px;overflow:hidden}
+#v-exec .br .fl{height:100%;border-radius:0 4px 4px 0;background:var(--c)}
+#v-exec .br .v{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+#v-exec .split{display:flex;height:34px;border-radius:6px;overflow:hidden;gap:2px;margin:6px 0 4px}
+#v-exec .split div{display:flex;align-items:center;padding-inline:10px;color:#fff;font-weight:600;font-size:.9rem;white-space:nowrap;overflow:hidden;background:var(--c);min-width:0}
+#v-exec .gantt{display:grid;gap:3px}
+#v-exec .gr{display:grid;grid-template-columns:48px 1fr;gap:8px;align-items:center}
+#v-exec .gr .m{font-size:.8rem;color:var(--muted);text-align:right}
+#v-exec .gt{position:relative;height:30px;background:var(--grid);border-radius:4px}
+#v-exec .gb{position:absolute;top:2px;bottom:2px;border-radius:3px;font-size:.68rem;line-height:24px;padding-inline:4px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  background:color-mix(in srgb,var(--c) var(--tint),var(--card));border:1px solid var(--c);color:var(--fg);box-sizing:border-box}
+#v-exec .gb.ho{background:transparent;border:1px dashed var(--bad);color:var(--bad)}
+#v-exec .axis{display:grid;grid-template-columns:48px 1fr;gap:8px;font-size:.7rem;color:var(--muted)}
+#v-exec .axis div{display:flex;justify-content:space-between}
+#v-exec .sl{display:grid;grid-template-columns:1fr;gap:10px}
+#v-exec .sl label{font-weight:600}
+#v-exec input[type=range]{width:100%;accent-color:var(--c1)}
+#v-exec .res{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+#v-exec .res div{background:var(--bg);border-radius:8px;padding:10px 12px}
+#v-exec .res b{display:block;font-family:var(--font-display);font-size:1.3rem;font-variant-numeric:tabular-nums}
+#v-exec .res span{font-size:.8rem;color:var(--muted)}
+#v-exec .neg{color:var(--bad)}.pos{color:var(--good)}
+#v-exec .watch{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+#v-exec .watch li{display:grid;grid-template-columns:auto 1fr;gap:10px}
+#v-exec .watch .tag{font-size:.75rem;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:1px 9px;height:fit-content;white-space:nowrap}
+#v-exec .watch .tag.hi{border-color:var(--bad);color:var(--bad)}
+#e-tip{position:fixed;z-index:20;pointer-events:none;background:var(--fg);color:var(--bg);font-size:.8rem;padding:6px 9px;border-radius:6px;max-width:240px;display:none;line-height:1.4}
+#v-exec .ft{color:var(--muted);font-size:.8rem}
+#v-exec .br{} @media (max-width:560px){#v-exec .br{grid-template-columns:1fr auto}#v-exec .br .tr{grid-column:1/-1;order:3}}
+#v-exec{--grid:var(--line);--ink:var(--fg);--good:#1b7a43;--tint:22%}
+#v-exec{display:grid;gap:22px;margin-top:18px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #v-exec{--good:#5fd18a}}
+:root[data-theme="dark"] #v-exec{--good:#5fd18a}
+#v-exec[hidden]{display:none}
+#v-exec .zh{font-size:.85em;margin-left:6px;font-weight:400;color:var(--muted)}
+#v-exec .sub{margin:0}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600&family=Sarabun:wght@400;600&family=Noto+Sans+SC:wght@400;500&display=swap">
+
+<div class="wrap">
+  <h1>ปฏิทินหลักสูตร DiRui Thailand 2027 <span class="zh" style="font-weight:400;font-size:.7em;color:var(--muted)">泰国帝瑞27年课程排期</span></h1>
+  <p class="sub" id="sub"></p>
+  <div class="tabs" role="group" aria-label="เลือกหน้า 选择页面">
+    <button class="tab" id="tab-s" aria-pressed="true">ตารางเรียน 课程表</button>
+    <button class="tab" id="tab-p" aria-pressed="false">ราคาขาย 价格表</button>
+    <button class="tab" id="tab-e" aria-pressed="false">ค่าใช้จ่าย 费用</button>
+    <button class="tab" id="tab-x" aria-pressed="false">สรุปผู้บริหาร 管理层摘要</button>
+  </div>
+  <div id="v-sched">
+  <div class="bar">
+    <div class="row" id="months" role="group" aria-label="เลือกเดือน 选择月份"></div>
+    <div class="row" id="lvls" role="group" aria-label="กรองตามระดับ 按级别筛选"></div>
+    <div class="row" id="tops" role="group" aria-label="กรองตามหัวข้อ 按主题筛选"></div>
+  </div>
+  <div id="view"></div>
+  </div>
+  <div id="v-price" hidden></div>
+  <div id="v-exp" hidden></div>
+<div id="v-exec" hidden>
+<p class="sub">ตัวเลขทั้งหมดเป็นงบประมาณตามแผน ไม่ใช่ผลการดำเนินงานจริง · หน่วยเป็นบาท (THB) <span id="e-subtitle"></span></p>
+  <section>
+    <div class="kpis" id="e-kpis"></div>
+  </section>
+
+  <section class="card">
+    <h2>สรุป 3 ข้อ <span class="zh">三点结论</span></h2>
+    <ul class="msgs" id="e-msgs"></ul>
+  </section>
+
+  <section class="card">
+    <h2>รายได้เทียบค่าใช้จ่ายรายเดือน <span class="zh">月度收入与成本</span></h2>
+    <p class="q">เดือนไหนทำกำไรได้เท่าไร ตัวเลขเหนือแท่งคืออัตรากำไรขั้นต้น</p>
+    <div class="legend"><span><i style="background:var(--c1)"></i>รายได้รวม 总收入</span><span><i class="ln"></i>ค่าใช้จ่ายรวม 总成本</span><span>% = อัตรากำไรขั้นต้น 毛利率</span></div>
+    <div id="e-c1"></div>
+    <details><summary>ดูเป็นตาราง 查看表格</summary><div class="tw" id="e-t1"></div></details>
+  </section>
+
+  <section class="card">
+    <h2>รายได้มาจากหลักสูตรไหน <span class="zh">收入来源</span></h2>
+    <p class="q">รายได้ค่าคอร์สทั้งปี แยกตามระดับและหลักสูตร (ไม่รวมบัตรสมาชิก)</p>
+    <div id="e-split"></div>
+    <div class="legend" style="margin-top:10px"><span><i style="background:var(--c1)"></i>ขั้นพื้นฐาน 基础</span><span><i style="background:var(--c2)"></i>ขั้นสูง 进阶</span></div>
+    <div class="bars" id="e-courses"></div>
+  </section>
+
+  <section class="card">
+    <h2>ค่าใช้จ่ายไปอยู่ที่ไหน <span class="zh">成本结构</span></h2>
+    <p class="q">ค่าใช้จ่ายต่อเดือนในเดือนปกติ (ยอดรวม <span id="e-costTotal"></span> บาท) เกือบเท่ากันทุกเดือน</p>
+    <div class="bars" id="e-cost"></div>
+  </section>
+
+  <section class="card">
+    <h2>ปฏิทินเปิดสอนทั้งปี <span class="zh">全年开课日历</span></h2>
+    <p class="q">แถบสีคือช่วงที่เปิดคอร์ส เส้นประแดงคือวันหยุด ไม่มีคลาส</p>
+    <div class="legend"><span><i style="background:var(--c1)"></i>ขั้นพื้นฐาน 基础</span><span><i style="background:var(--c2)"></i>ขั้นสูง 进阶</span><span style="color:var(--bad)">▭ วันหยุด 假期</span></div>
+    <div class="gantt" id="e-gantt"></div>
+    <div class="axis"><span></span><div><span>1</span><span>วันที่ของเดือน</span><span>31</span></div></div>
+  </section>
+
+  <section class="card">
+    <h2>ถ้าผู้เรียนไม่เต็มตามแผน <span class="zh">如果招生不及预期</span></h2>
+    <p class="q">แผนตั้งไว้ที่ผู้เรียนเต็ม 30–50 คนต่อรอบ ลองเลื่อนดูว่ากำไรเปลี่ยนอย่างไร โดยสมมติว่าค่าใช้จ่ายและรายได้บัตรสมาชิกคงที่</p>
+    <div class="sl">
+      <label for="e-sens">จำนวนผู้เรียนเทียบกับแผน: <span id="e-sensv">100%</span></label>
+      <input id="e-sens" type="range" min="40" max="100" step="5" value="100">
+      <div class="res" id="e-res"></div>
+      <p class="q" style="margin:0" id="e-be"></p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ประเด็นที่ควรตัดสินใจหรือตรวจสอบ <span class="zh">需要决策或核实的事项</span></h2>
+    <ul class="watch" id="e-watch"></ul>
+  </section>
+
+  <div id="e-tip" role="tooltip"></div>
+</div>
+  <footer>ชื่ออาจารย์ผู้สอนในไฟล์ต้นฉบับยังไม่กำหนด จึงยังไม่แสดง · ระดับพื้นฐาน/ขั้นสูงแบ่งโดยผู้จัดทำจากชื่อหลักสูตร (ชื่อที่มี Foundation = พื้นฐาน) · ที่มา: ไฟล์ 帝瑞泰国27年课程排期及预算执行表</footer>
+</div>
+
+<script>
+var MN=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+var MNF=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+var DOWN=[["จ.","周一"],["อ.","周二"],["พ.","周三"],["พฤ.","周四"],["ศ.","周五"],["ส.","周六"],["อา.","周日"]];
+var C={
+ ps:['ระบบพื้นฐานดัด-ทำสี','烫染基础体系课程','Foundation Perm & Color System','b'],
+ hp:['ดัดร้อนพื้นฐาน','热烫基础课程','Foundation Hot Perm','b'],
+ st:['จัดแต่งทรงพื้นฐาน','造型基础课程','Foundation Styling','b'],
+ co:['ทำสีพื้นฐาน','染发基础课程','Foundation Color','b'],
+ cu:['ตัดผมพื้นฐานถึงขั้นสูง','基础进阶裁剪','Basic to Advanced Cutting','a'],
+ cp:['ตัด-ดัดเชิงพาณิชย์','商业剪烫课程','Commercial Cut & Perm','a'],
+ mc:['ตัด-ดัดผมชายเชิงพาณิชย์','男士商业剪烫课程',"Commercial Men's Cut & Perm",'a'],
+ sh:['ถ่ายทำ/ตัดต่อ','拍摄/剪辑课程','Shooting & Editing','a'],
+ cd:['ออกแบบทรงผม (ตัด-ดัด-ทำสี)','剪裁设计课程（剪烫染）','Cutting & Design (Cut, Perm & Color)','a'],
+ ch:['ทำสีขั้นสูง','染发高阶课程','Color High-level','a'],
+ ho:['วันหยุด','假期','Holiday','h']
+};
+var HOL={2:['ตรุษจีน','中国新年','Chinese New Year'],10:['วันชาติจีน','中国国庆',"China's National Day"]};
+var R=[[1,1,12,'ps'],[1,25,29,'hp'],[2,4,4,'ho'],[2,8,8,'ho'],[2,15,19,'st'],[2,22,24,'cp'],
+[3,1,12,'cu'],[3,15,17,'mc'],[3,29,31,'sh'],[4,5,16,'ps'],[4,19,23,'co'],[4,26,30,'hp'],
+[5,3,5,'cd'],[5,10,14,'st'],[5,24,26,'ch'],[6,1,10,'cu'],[6,14,16,'mc'],[6,28,30,'sh'],
+[7,1,12,'ps'],[7,19,23,'hp'],[7,26,30,'co'],[8,2,4,'cp'],[8,9,13,'st'],[8,16,18,'ch'],
+[9,1,10,'cu'],[9,13,15,'mc'],[9,27,29,'sh'],[10,1,1,'ho'],[10,4,4,'ho'],[10,11,22,'ps'],[10,25,29,'hp'],
+[11,1,5,'co'],[11,8,10,'cd'],[11,22,24,'ch'],[12,1,10,'cu'],[12,13,15,'mc'],[12,27,29,'sh']];
+var LVN={b:['ขั้นพื้นฐาน','基础'],a:['ขั้นสูง','进阶']};
+/* topic of each class: colored tag + icon. mix = combines several skills */
+var CAT={cut:['ตัด','剪'],perm:['ดัด','烫'],color:['ทำสี','染'],style:['จัดแต่งทรง','造型'],media:['ถ่ายทำ/ตัดต่อ','拍摄'],mix:['ผสมหลายทักษะ','综合']};
+var TAGS={ps:['perm','color'],hp:['perm'],st:['style'],co:['color'],cu:['cut'],cp:['cut','perm'],mc:['cut','perm'],sh:['media'],cd:['cut','perm','color'],ch:['color']};
+var PRIM={ps:'mix',hp:'perm',st:'style',co:'color',cu:'cut',cp:'mix',mc:'mix',sh:'media',cd:'mix',ch:'color'};
+var IC={
+ ps:'<path d="M12 12a1.5 1.5 0 1 1 3 0 4 4 0 1 1-8 0 6.5 6.5 0 1 1 13 0"/>',
+ hp:'<path d="M12 3c1 3 4 4.5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.5 2 1.5 2 0-3-1-4 .5-7z"/>',
+ st:'<path d="M4 7h16v4H4z"/><path d="M6 11v6M9 11v6M12 11v6M15 11v6M18 11v6"/>',
+ co:'<path d="M12 3c3.5 4.5 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 2.5-6.5 6-11z"/>',
+ ch:'<path d="M12 3c3.5 4.5 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 2.5-6.5 6-11z"/><path d="M9.5 14.5a2.5 2.5 0 0 0 2.5 2.5"/>',
+ cu:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 8l11.5 10M8.5 16L20 6"/>',
+ cp:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 8l11.5 10M8.5 16L20 6"/><path d="M17 4v4M15 6h4"/>',
+ mc:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 8l11.5 10M8.5 16L20 6"/><path d="M16 20h5"/>',
+ sh:'<rect x="3" y="7" width="18" height="12" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/>',
+ cd:'<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>'
+};
+var CATIC={cut:'cu',perm:'ps',color:'co',style:'st',media:'sh',mix:'cd'};
+function svgi(k,cls){return '<svg class="'+(cls||'ic')+'" viewBox="0 0 24 24" aria-hidden="true">'+IC[k]+'</svg>'}
+function tagsHTML(k){return TAGS[k].map(function(t){return '<span class="tg" style="--c:var(--t-'+t+')">'+CAT[t][0]+' '+CAT[t][1]+'</span>'}).join('')}
+var selT=null;
+var selM=(function(){var n=new Date();return n.getFullYear()===2027?n.getMonth()+1:1})(),selL=null;
+try{var sm=sessionStorage.getItem('dm');if(sm!==null)selM=+sm}catch(e){}
+
+function info(r){
+  var k=r[3],c=C[k];
+  if(k==='ho'){var h=HOL[r[0]];return {th:h[0],zh:h[1],en:h[2],lv:'h',k:'ho',prim:'',tags:[]}}
+  return {th:c[0],zh:c[1],en:c[2],lv:c[3],k:k,prim:PRIM[k],tags:TAGS[k]};
+}
+function hue(lv){return lv==='b'?'var(--c1)':lv==='a'?'var(--c2)':'var(--bad)'}
+function ccol(i){return i.lv==='h'?'var(--bad)':'var(--t-'+i.prim+')'}
+function vis(i){return i.lv==='h'||((!selL||i.lv===selL)&&(!selT||i.tags.indexOf(selT)>=0))}
+function days(m){return new Date(2027,m,0).getDate()}
+function rng(r,m){return r[1]===r[2]?r[1]+' '+MN[m-1]:r[1]+'–'+r[2]+' '+MN[m-1]}
+function runsOf(m){return R.filter(function(r){return r[0]===m})}
+function pill(lv){return lv==='h'?'':'<span class="pill">'+LVN[lv][0]+' '+LVN[lv][1]+'</span>'}
+
+function listHTML(m){
+  var rs=runsOf(m);
+  if(!rs.length)return '<div class="none">เดือนนี้ไม่มีรอบเรียน 本月无课程</div>';
+  var s='<div class="list">';
+  rs.forEach(function(r){
+    var i=info(r),n=r[2]-r[1]+1;
+    var hide=!vis(i)?' display:none':'';
+    s+='<div class="it'+(i.lv==='h'?' ho':'')+'" style="--c:'+ccol(i)+';'+hide+'"><div class="dt">'+rng(r,m)+'<small>'+(i.lv==='h'?'หยุด 休息':n+' วัน '+n+'天')+'</small></div>'+
+       '<div class="nm"><b>'+(i.k==='ho'?'':svgi(i.k,'ic big'))+i.th+'</b>'+pill(i.lv)+'<span class="tgs">'+(i.k==='ho'?'':tagsHTML(i.k))+'</span><span><span class="zh">'+i.zh+'</span> · '+i.en+'</span></div></div>';
+  });
+  return s+'</div>';
+}
+function gridHTML(m){
+  var dm=days(m),first=(new Date(2027,m-1,1).getDay()+6)%7,map={};
+  runsOf(m).forEach(function(r,idx){for(var d=r[1];d<=r[2];d++)map[d]={r:r,start:d===r[1]}});
+  var s='<div class="cal" role="grid">';
+  DOWN.forEach(function(x){s+='<div class="dow">'+x[0]+'<small class="zh">'+x[1]+'</small></div>'});
+  for(var e=0;e<first;e++)s+='<div class="d empty"></div>';
+  for(var d=1;d<=dm;d++){
+    var o=map[d],wd=(first+d-1)%7;
+    if(!o){s+='<div class="d"><span class="n">'+d+'</span></div>';continue}
+    var i=info(o.r),cls='d '+(i.lv==='h'?'ho':'on')+(vis(i)?'':' dim');
+    var show=o.start||wd===0;
+    s+='<div class="'+cls+'" style="--c:'+ccol(i)+'" title="'+i.th+' · '+i.zh+' · '+i.en+'"><span class="n">'+d+'</span>'+(i.k==='ho'?'':svgi(i.k,'gi'))+(show?'<span class="t">'+i.th+'<small class="zh">'+i.zh+'</small></span>':'')+'</div>';
+  }
+  return s+'</div>';
+}
+function yearHTML(){
+  var s='<div class="yr">';
+  for(var m=1;m<=12;m++){s+='<div><h3>'+MNF[m-1]+' '+m+'月</h3>'+listHTML(m)+'</div>'}
+  return s+'</div>';
+}
+function render(){
+  var mb=document.getElementById('months');mb.innerHTML='';
+  for(var i=0;i<=12;i++)(function(i){
+    var b=document.createElement('button');b.className='mb';
+    b.textContent=i===0?'ทั้งปี 全年':MN[i-1]+' '+i+'月';
+    b.setAttribute('aria-pressed',String(selM===i));
+    b.onclick=function(){selM=i;try{sessionStorage.setItem('dm',String(i))}catch(e){}render()};
+    mb.appendChild(b);
+  })(i);
+  var lv=document.getElementById('lvls');lv.innerHTML='';
+  [[null,'ทั้งหมด 全部'],['b','ขั้นพื้นฐาน 基础'],['a','ขั้นสูง 进阶']].forEach(function(x){
+    var b=document.createElement('button');b.className='lv';
+    if(x[0])b.style.setProperty('--c',x[0]==='b'?'var(--c1)':'var(--c2)');
+    b.innerHTML=(x[0]?'<i></i>':'')+x[1];
+    b.setAttribute('aria-pressed',String(selL===x[0]));
+    b.onclick=function(){selL=x[0];render()};
+    lv.appendChild(b);
+  });
+  var tp=document.getElementById('tops');tp.innerHTML='';
+  var allT=document.createElement('button');allT.className='lv';allT.textContent='ทุกหัวข้อ 全部主题';
+  allT.setAttribute('aria-pressed',String(selT===null));allT.onclick=function(){selT=null;render()};tp.appendChild(allT);
+  ['cut','perm','color','style','media','mix'].forEach(function(t){
+    var b=document.createElement('button');b.className='lv tp';b.style.setProperty('--c','var(--t-'+t+')');
+    b.innerHTML=svgi(CATIC[t],'ic')+CAT[t][0]+' '+CAT[t][1];
+    b.setAttribute('aria-pressed',String(selT===t));
+    if(t==='mix')b.title='คอร์สที่รวมหลายทักษะ เช่น ตัด+ดัด, ดัด+ทำสี';
+    b.onclick=function(){selT=selT===t?null:t;render()};tp.appendChild(b);
+  });
+  var v=document.getElementById('view');
+  if(selM===0){v.innerHTML=yearHTML();return}
+  var n=runsOf(selM).filter(function(r){return r[3]!=='ho'}).length;
+  v.innerHTML='<div class="head"><h2>'+MNF[selM-1]+' 2027 <span class="zh" style="color:var(--muted);font-weight:400;font-size:.7em">'+selM+'月</span></h2><span>'+n+' หลักสูตร '+n+'门课程</span></div>'+gridHTML(selM)+listHTML(selM);
+}
+var nr=R.filter(function(r){return r[3]!=='ho'}).length;
+document.getElementById('sub').textContent=nr+' รอบ · 10 หลักสูตร · เปิดสอนทุกเดือน ยกเว้นช่วงตรุษจีนและวันชาติจีน';
+render();
+
+/* ================= budget data (from the Excel file) ================= */
+var MEMBER=139950;
+var BUD={
+1:{c:[['ps',22500,50],['hp',12800,50]],e:[161000,80500,46000,690000,140000,55000]},
+2:{c:[['st',12800,50],['cp',16800,50]],e:[161000,65500,36000,570000,140000,55000]},
+3:{c:[['cu',22500,50],['mc',16800,30],['sh',16800,30]],e:[161000,80500,46000,690000,140000,55000]},
+4:{c:[['ps',22500,40],['co',12800,40],['hp',12800,40]],e:[161000,80500,46000,690000,140000,55000]},
+5:{c:[['cd',19800,40],['st',12800,40],['ch',16800,40]],e:[161000,80500,46000,690000,140000,55000]},
+6:{c:[['cu',22500,40],['mc',16800,30],['sh',16800,30]],e:[161000,80500,46000,690000,140000,55000]},
+7:{c:[['ps',22500,30],['hp',12800,40],['co',12800,40]],e:[161000,80500,46000,690000,140000,55000]},
+8:{c:[['cp',16800,40],['st',12800,30],['ch',16800,40]],e:[161000,80500,46000,690000,140000,55000]},
+9:{c:[['cu',22500,30],['mc',16800,40],['sh',16800,40]],e:[161000,80500,46000,690000,140000,55000]},
+10:{c:[['ps',22500,40],['hp',16800,40]],e:[161000,80500,46000,690000,140000,55000]},
+11:{c:[['co',12800,40],['cd',19800,40],['ch',16800,40]],e:[161000,80500,46000,690000,140000,55000]},
+12:{c:[['cu',22500,40],['mc',16800,30],['sh',16800,30]],e:[161000,80500,46000,690000,140000,55000]}};
+var EXPN=[["ค่าใช้จ่ายคงที่ (เช่า น้ำไฟ)","固定开支"],["ต้นทุนคอร์สพื้นฐาน","课程基本成本"],["การตลาด","市场运营推广"],["บุคลากร (อาจารย์ ผู้ช่วย ทีมงาน)","人员开支"],["เดินทาง/ที่พักบุคลากร","人员交通差旅"],["อุปกรณ์/สินทรัพย์","日常消耗品/固定资产"]];
+var CATN=EXPN.concat([["อื่นๆ","其他"]]);
+var ADD={},EXPS=[],coll=null,writable=true,openM=null;
+/* line items per category, as in the Excel budget sheets: [Thai, Chinese, [normal month, February]] ; null = left blank in the file */
+var ITEMS=[
+ [["ค่าเช่า (รวมค่าบริหารอาคาร)","房租",[141000]],["ค่าน้ำ-ค่าไฟ","水电",[20000]],["ภาษีธุรกิจ","营业税",[null]]],
+ [["ผลิตภัณฑ์/วัสดุสำหรับคอร์ส","课程产品所需",[50000,40000]],["สมุดโน้ตผู้เรียน","学员笔记本",[3000]],["ใบประกาศนียบัตร","毕业证",[20000,15000]],["ป้ายชื่อผู้เรียน","学员名牌",[7500]]],
+ [["ค่าตัดต่อวิดีโอสั้น","短视频剪辑费用",[6000]],["ค่ารับรองทั่วไป","日常招待费",[40000,30000]]],
+ [["ค่าสอนอาจารย์ (รายชั่วโมง)","老师课时费",[450000,350000]],["ค่าสอนผู้ช่วยอาจารย์","助教老师",[75000,55000]],["เงินเดือนพนักงานประจำสถาบัน","学校固定人员工资",[40000]],["เงินเดือนฝ่ายการเงิน","财务人员工资",[30000]],["เงินเดือนล่าม","翻译人员工资",[60000]],["เงินเดือนแม่บ้าน","清洁工工资",[15000]],["ค่าใช้จ่ายทีมงานช่วงเปิดคอร์ส","开课期间工作人员费用",[20000]]],
+ [["ตั๋วเครื่องบินอาจารย์และผู้ช่วย","老师和助教老师机票",[100000]],["ค่าเช่าที่พักบุคลากรจากจีน","中国人员租房房租",[20000]],["ค่าอาหารอาจารย์ช่วงสอน","老师课程餐食",[10000]],["ค่าเดินทางในเมือง","市内交通",[10000]],["ค่าวีซ่าอาจารย์จีน","中国老师签证费用",[null]]],
+ [["เครื่องพิมพ์","打印机",[35000]],["โต๊ะ","桌子",[10000]],["เก้าอี้","椅子",[10000]]]
+];
+function itemAmt(m,ci,ii){var v=ITEMS[ci][ii][2];return (m===2&&v.length>1)?v[1]:v[0]}
+function itemTot(m,ci,ii){
+  if(m!=='Y')return itemAmt(m,ci,ii);
+  var s=0,any=false;for(var q=1;q<=12;q++){var v=itemAmt(q,ci,ii);if(v!==null){s+=v;any=true}}return any?s:null;
+}
+function detHTML(m){
+  var list=EXPS.filter(function(e){return m==='Y'||e.m===m});
+  var extra=list.reduce(function(a,e){return a+(+e.amt||0)},0),base=0,blocks=[];
+  ITEMS.forEach(function(cat,ci){
+    var sub=0,rows='';
+    cat.forEach(function(it,ii){
+      var v=itemTot(m,ci,ii);
+      if(v===null)rows+='<div class="ir"><span>'+it[0]+' <span class="zh">'+it[1]+'</span></span><span class="na">ไม่ได้ใส่ในงบ</span></div>';
+      else{sub+=v;rows+='<div class="ir"><span>'+it[0]+' <span class="zh">'+it[1]+'</span></span><span>'+f(v)+'</span></div>'}
+    });
+    base+=sub;blocks.push({ci:ci,sub:sub,rows:rows});
+  });
+  var grand=base+extra,out='<div class="dg">';
+  blocks.forEach(function(b){
+    out+='<div class="dc"><div class="dh"><b>'+EXPN[b.ci][0]+' <span class="zh">'+EXPN[b.ci][1]+'</span></b><span>'+f(b.sub)+' <small>('+pc(b.sub/grand)+')</small></span></div>'+b.rows+'</div>';
+  });
+  if(list.length){
+    var rows='';
+    list.slice().sort(function(a,b){return a.m-b.m||a.ts-b.ts}).forEach(function(e){
+      var cn=CATN[e.cat]||CATN[6];
+      rows+='<div class="ir"><span>'+(m==='Y'?MN[e.m-1]+' · ':'')+esc(e.item)+' <span class="na">'+esc(cn[0])+(e.note?' · '+esc(e.note):'')+'</span></span><span>'+f(e.amt)+'</span></div>';
+    });
+    out+='<div class="dc extra"><div class="dh"><b>ค่าใช้จ่ายเพิ่มเติม <span class="zh">追加费用</span></b><span>'+f(extra)+' <small>('+pc(extra/grand)+')</small></span></div>'+rows+'</div>';
+  }
+  return out+'</div><p class="dt2">รวม '+f(grand)+' บาท (ตามแผน '+f(base)+(extra?' + เพิ่มเติม '+f(extra):'')+')</p>';
+}
+function xbtn(label,key){var o=String(openM)===String(key);return '<button type="button" class="xo" data-k="'+key+'" aria-expanded="'+o+'"><span class="chev">'+(o?'▾':'▸')+'</span> '+label+'</button>'}
+function f(n){return Math.round(n).toLocaleString('en-US')}
+function pc(x){return (x*100).toFixed(1)+'%'}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function baseEx(m){return BUD[m].e.reduce(function(a,c){return a+c},0)}
+function calc(m){var cr=0;BUD[m].c.forEach(function(x){cr+=x[1]*x[2]});var extra=ADD[m]||0,ex=baseEx(m)+extra,rev=cr+MEMBER;return{cr:cr,rev:rev,ex:ex,extra:extra,pr:rev-ex,mg:(rev-ex)/rev}}
+function ico(k){return '<svg class="ic" style="--c:var(--t-'+PRIM[k]+')" viewBox="0 0 24 24" aria-hidden="true">'+IC[k]+'</svg>'}
+
+/* ================= price page ================= */
+function priceRows(){
+  var out=[];
+  R.forEach(function(r){
+    if(r[3]==='ho')return;
+    var b=BUD[r[0]].c.filter(function(x){return x[0]===r[3]})[0];
+    out.push({m:r[0],a:r[1],z:r[2],k:r[3],p:b[1],hc:b[2],d:r[2]-r[1]+1});
+  });
+  return out;
+}
+function rg(a,b){return a===b?f(a):f(a)+'–'+f(b)}
+function priceBuild(){
+  var all=priceRows(),s='';
+  s+='<p class="pnote"><b>ราคาต่อคน 单价</b> คือราคาขายต่อหลักสูตร 1 รอบ ตามช่อง "单价 Unit Price" ในไฟล์ · <b>ต่อวัน</b> = ราคา ÷ จำนวนวันเรียนของรอบนั้น (นับตามช่วงวันที่ในตาราง รวมเสาร์–อาทิตย์ที่อยู่ในช่วง) · <b>ต่อคลาส</b> = รายได้ต่อรอบ = ราคา × ผู้เรียนตามแผน 招生人数 · ราคาในไฟล์เป็นราคาเต็ม ยังไม่รวมส่วนลดบัตรสมาชิก</p>';
+  s+='<h2 class="ph">สรุปรายหลักสูตร <small>各课程价格汇总</small></h2><div class="tw"><table class="pt"><thead><tr><th>หลักสูตร<small>课程</small></th><th>ราคาต่อคน<small>单价 (บาท)</small></th><th>วันเรียน<small>天数</small></th><th>ต่อคนต่อวัน<small>每人每天</small></th><th>ผู้เรียนตามแผน<small>招生人数</small></th><th>รายได้ต่อคลาส<small>每班收入</small></th><th>จำนวนรอบ<small>期数</small></th></tr></thead><tbody>';
+  ['b','a'].forEach(function(l){
+    s+='<tr class="lvrow"><td colspan="7">'+LVN[l][0]+' '+LVN[l][1]+'</td></tr>';
+    Object.keys(C).filter(function(k){return k!=='ho'&&C[k][3]===l}).forEach(function(k){
+      var rs=all.filter(function(x){return x.k===k});
+      var P=rs.map(function(x){return x.p}),D=rs.map(function(x){return x.d}),PD=rs.map(function(x){return x.p/x.d}),H=rs.map(function(x){return x.hc}),V=rs.map(function(x){return x.p*x.hc});
+      var mn=function(a){return Math.min.apply(null,a)},mx=function(a){return Math.max.apply(null,a)};
+      s+='<tr>'+'<td>'+ico(k)+C[k][0]+' <span class="zh" style="color:var(--muted)">'+C[k][1]+'</span></td>'+
+        '<td class="big'+(mn(P)!==mx(P)?' flag':'')+'">'+rg(mn(P),mx(P))+'</td><td>'+rg(mn(D),mx(D))+'</td><td>'+rg(Math.round(mn(PD)),Math.round(mx(PD)))+'</td>'+
+        '<td>'+rg(mn(H),mx(H))+'</td><td>'+rg(mn(V),mx(V))+'</td><td>'+rs.length+'</td></tr>';
+    });
+  });
+  s+='</tbody></table></div>';
+  s+='<h2 class="ph">รายรอบตลอดปี <small>全年各期明细</small></h2><div class="tw"><table class="pt"><thead><tr><th>หลักสูตร<small>课程</small></th><th class="l">วันที่<small>日期</small></th><th>ราคาต่อคน<small>单价</small></th><th>วันเรียน<small>天数</small></th><th>ต่อคนต่อวัน<small>每人每天</small></th><th>ผู้เรียนตามแผน<small>人数</small></th><th>รายได้ต่อคลาส<small>每班收入</small></th></tr></thead><tbody>';
+  var last=0;
+  all.forEach(function(x){
+    if(x.m!==last){s+='<tr class="lvrow"><td colspan="7">'+MNF[x.m-1]+' '+x.m+'月 2027</td></tr>';last=x.m}
+    var odd=x.k==='hp'&&x.p!==12800;
+    s+='<tr><td>'+ico(x.k)+C[x.k][0]+'</td><td class="l">'+(x.a===x.z?x.a:x.a+'–'+x.z)+' '+MN[x.m-1]+'</td><td class="big'+(odd?' flag':'')+'">'+f(x.p)+'</td><td>'+x.d+'</td><td>'+f(x.p/x.d)+'</td><td>'+x.hc+'</td><td>'+f(x.p*x.hc)+'</td></tr>';
+  });
+  s+='</tbody></table></div>';
+  document.getElementById('v-price').innerHTML=s;
+}
+
+/* ================= expenses page ================= */
+function xstatus(t){var e=document.getElementById('x-st');if(e)e.textContent=t||''}
+function setWritable(ok,msg){
+  writable=ok;
+  ['x-m','x-c','x-i','x-a','x-n','x-go'].forEach(function(id){var e=document.getElementById(id);if(e)e.disabled=!ok});
+  if(msg!==undefined)xstatus(msg);
+}
+function expInit(){
+  var mo='',ct='';
+  for(var i=1;i<=12;i++)mo+='<option value="'+i+'">'+MNF[i-1]+' '+i+'月</option>';
+  CATN.forEach(function(c,i){ct+='<option value="'+i+'">'+c[0]+' '+c[1]+'</option>'});
+  document.getElementById('v-exp').innerHTML=
+   '<p class="pnote">ตารางนี้รวม <b>ค่าใช้จ่ายตามแผน 预算成本</b> จากไฟล์ Excel กับ <b>ค่าใช้จ่ายเพิ่มเติม 追加费用</b> ที่เพิ่มเองในหน้านี้ รายการที่เพิ่มจะถูกบันทึกไว้ และคนที่เปิดหน้าเห็นตรงกัน</p>'+
+   '<form class="xf" id="xf" autocomplete="off">'+
+   '<label for="x-m">เดือน 月份<select id="x-m">'+mo+'</select></label>'+
+   '<label for="x-c">หมวด 类别<select id="x-c">'+ct+'</select></label>'+
+   '<label for="x-i">รายการ 项目<input id="x-i" type="text" maxlength="120" required placeholder="เช่น ค่าอุปกรณ์เพิ่ม"></label>'+
+   '<label for="x-a">จำนวนเงิน (บาท) 金额<input id="x-a" type="number" min="0" step="any" required inputmode="decimal" placeholder="0"></label>'+
+   '<label for="x-n">หมายเหตุ 备注<input id="x-n" type="text" maxlength="200" placeholder="ไม่ใส่ก็ได้"></label>'+
+   '<button class="go" id="x-go" type="submit">เพิ่มค่าใช้จ่าย 添加</button></form>'+
+   '<p class="xs" id="x-st" role="status" aria-live="polite"></p><div id="exp-dyn"></div>';
+  document.getElementById('x-m').value=String(new Date().getMonth()+1);
+  document.getElementById('xf').addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var item=document.getElementById('x-i').value.trim(),amt=parseFloat(document.getElementById('x-a').value);
+    if(!item||!(amt>=0)){xstatus('กรอกรายการและจำนวนเงินให้ครบ');return}
+    if(!coll){xstatus('ยังบันทึกไม่ได้ในมุมมองนี้');return}
+    var rec={m:+document.getElementById('x-m').value,cat:+document.getElementById('x-c').value,item:item,amt:amt,note:document.getElementById('x-n').value.trim(),ts:Date.now()};
+    document.getElementById('x-go').disabled=true;
+    coll.add(rec).then(function(){
+      document.getElementById('x-i').value='';document.getElementById('x-a').value='';document.getElementById('x-n').value='';
+      xstatus('เพิ่มแล้ว: '+item+' '+f(amt)+' บาท');
+    }).catch(function(e){
+      xstatus(e&&e.code==='quota_exceeded'?'พื้นที่เก็บข้อมูลเต็ม ลบรายการเก่าก่อน':'บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง');
+    }).then(function(){document.getElementById('x-go').disabled=!writable});
+  });
+  document.getElementById('v-exp').addEventListener('click',function(ev){
+    var o=ev.target.closest&&ev.target.closest('button.xo');
+    if(o){var kk=o.getAttribute('data-k');openM=(String(openM)===kk)?null:(kk==='Y'?'Y':+kk);expDyn();return}
+    var b=ev.target.closest&&ev.target.closest('button.xd');if(!b||!coll)return;
+    if(!b.classList.contains('arm')){
+      b.classList.add('arm');b.textContent='ยืนยันลบ 确认';
+      setTimeout(function(){if(b.isConnected){b.classList.remove('arm');b.textContent='ลบ 删除'}},4000);return;
+    }
+    b.disabled=true;
+    coll.doc(b.getAttribute('data-id')).delete().catch(function(){b.disabled=false;xstatus('ลบไม่สำเร็จ')});
+  });
+  expDyn();
+}
+function expDyn(){
+  var tp=0,ta=0,tr=0;
+  for(var m=1;m<=12;m++){tp+=baseEx(m);ta+=ADD[m]||0;tr+=calc(m).rev}
+  var s='<div class="sum"><div><b>'+f(tp)+'</b><span>ตามแผน 预算成本 (บาท)</span></div><div><b>'+f(ta)+'</b><span>เพิ่มเติม 追加费用</span></div><div><b>'+f(tp+ta)+'</b><span>รวมทั้งปี 全年合计</span></div><div><b>'+f(tr-tp-ta)+'</b><span>กำไรขั้นต้นหลังรวม 毛利</span></div></div>';
+  s+='<h2 class="ph">รายเดือน <small>按月汇总 · คลิกที่เดือนเพื่อดูรายการค่าใช้จ่าย 点击月份查看明细</small></h2><div class="tw"><table class="pt"><thead><tr><th>เดือน<small>月份</small></th><th>ตามแผน<small>预算成本</small></th><th>เพิ่มเติม<small>追加</small></th><th>ค่าใช้จ่ายรวม<small>合计</small></th><th>รายได้ตามแผน<small>预算收入</small></th><th>กำไรขั้นต้น<small>毛利</small></th></tr></thead><tbody>';
+  for(var k=1;k<=12;k++){
+    var c=calc(k);
+    s+='<tr class="mrow'+(openM===k?' open':'')+'"><td>'+xbtn(MNF[k-1]+' '+k+'月',k)+'</td><td>'+f(baseEx(k))+'</td><td>'+(c.extra?f(c.extra):'–')+'</td><td class="big">'+f(c.ex)+'</td><td>'+f(c.rev)+'</td><td>'+f(c.pr)+' <span style="color:var(--muted)">('+pc(c.mg)+')</span></td></tr>';
+    if(openM===k)s+='<tr class="det"><td colspan="6">'+detHTML(k)+'</td></tr>';
+  }
+  s+='<tr class="sumrow mrow'+(openM==='Y'?' open':'')+'"><td>'+xbtn('ทั้งปี 全年','Y')+'</td><td>'+f(tp)+'</td><td>'+f(ta)+'</td><td>'+f(tp+ta)+'</td><td>'+f(tr)+'</td><td>'+f(tr-tp-ta)+'</td></tr>';
+  if(openM==='Y')s+='<tr class="det"><td colspan="6">'+detHTML('Y')+'</td></tr>';
+  s+='</tbody></table></div>';
+  s+='<h2 class="ph">ค่าใช้จ่ายที่เพิ่มเอง <small>追加费用明细</small></h2>';
+  if(!EXPS.length){
+    s+='<div class="tw"><div class="empty2">ยังไม่มีรายการเพิ่มเติม กรอกแบบฟอร์มด้านบนเพื่อเพิ่มค่าใช้จ่ายที่จะเกิดขึ้น</div></div>';
+  } else {
+    var L=EXPS.slice().sort(function(a,b){return a.m-b.m||a.ts-b.ts});
+    s+='<div class="tw"><table class="pt"><thead><tr><th>เดือน<small>月份</small></th><th class="l">หมวด<small>类别</small></th><th class="l">รายการ<small>项目</small></th><th class="l">หมายเหตุ<small>备注</small></th><th>จำนวนเงิน<small>金额</small></th><th></th></tr></thead><tbody>';
+    L.forEach(function(e){
+      var cn=CATN[e.cat]||CATN[6];
+      s+='<tr><td>'+MN[e.m-1]+' '+e.m+'月</td><td class="l">'+esc(cn[0])+' '+esc(cn[1])+'</td><td class="l">'+esc(e.item)+'</td><td class="l" style="color:var(--muted)">'+esc(e.note||'')+'</td><td class="big">'+f(e.amt)+'</td><td>'+(writable?'<button type="button" class="xd" data-id="'+esc(e.id)+'">ลบ 删除</button>':'')+'</td></tr>';
+    });
+    s+='</tbody></table></div>';
+  }
+  s+='<details class="dd"><summary>ค่าใช้จ่ายตามแผนแยกหมวด 预算成本分类</summary><div class="tw" style="margin-top:8px"><table class="pt" style="min-width:820px"><thead><tr><th>เดือน<small>月份</small></th>';
+  EXPN.forEach(function(n){s+='<th>'+n[0]+'<small>'+n[1]+'</small></th>'});
+  s+='<th>รวม<small>合计</small></th></tr></thead><tbody>';
+  for(var j=1;j<=12;j++){
+    s+='<tr><td>'+MNF[j-1]+' '+j+'月</td>';
+    BUD[j].e.forEach(function(v){s+='<td>'+f(v)+'</td>'});
+    s+='<td class="big">'+f(baseEx(j))+'</td></tr>';
+  }
+  s+='</tbody></table></div></details>';
+  document.getElementById('exp-dyn').innerHTML=s;
+}
+function startDb(){
+  if(!(window.claude&&claude.use)){setWritable(false,'บันทึกรายการเพิ่มเติมไม่ได้ในมุมมองนี้');return}
+  setWritable(false,'กำลังเชื่อมต่อที่เก็บข้อมูล…');
+  claude.use('db').then(function(db){
+    if(!db){setWritable(false,'ต้องเข้าสู่ระบบจึงจะเพิ่มและดูรายการเพิ่มเติมได้');return}
+    coll=db.collection('expenses');
+    coll.orderBy('ts').onSnapshot(function(snap){
+      EXPS=snap.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o}).filter(function(o){return o.m>=1&&o.m<=12});
+      ADD={};EXPS.forEach(function(e){ADD[e.m]=(ADD[e.m]||0)+(+e.amt||0)});
+      expDyn();
+    },function(){setWritable(false,'การเชื่อมต่อข้อมูลสิ้นสุดลง โหลดหน้าใหม่อีกครั้ง')});
+    setWritable(true,'');
+    return claude.use('user').then(function(u){
+      if(!u)return;
+      return Promise.resolve(u.can('data.write')).then(function(ok){if(ok===false){setWritable(false,'บัญชีนี้ดูได้อย่างเดียว เพิ่มรายการไม่ได้');expDyn()}});
+    });
+  }).catch(function(){setWritable(false,'เชื่อมต่อที่เก็บข้อมูลไม่สำเร็จ')});
+}
+
+/* ================= tabs ================= */
+function setView(v){
+  ['s','p','e','x'].forEach(function(x){
+    document.getElementById({s:'v-sched',p:'v-price',e:'v-exp',x:'v-exec'}[x]).hidden=v!==x;
+    document.getElementById('tab-'+x).setAttribute('aria-pressed',String(v===x));
+  });
+}
+['s','p','e','x'].forEach(function(x){document.getElementById('tab-'+x).onclick=function(){setView(x)}});
+function execBuild(){
+function M(n){return (n/1e6).toFixed(2)+' ล้าน'}
+// ---- derived numbers ----
+var mon=[],Y={cr:0,rev:0,ex:0};
+for(var m=1;m<=12;m++){
+  var b=BUD[m],cr=0;b.c.forEach(function(x){cr+=x[1]*x[2]});
+  var ex=b.e.reduce(function(a,c){return a+c},0),rev=cr+MEMBER;
+  mon.push({m:m,cr:cr,rev:rev,ex:ex,pr:rev-ex,mg:(rev-ex)/rev});
+  Y.cr+=cr;Y.rev+=rev;Y.ex+=ex;
+}
+Y.pr=Y.rev-Y.ex;Y.mg=Y.pr/Y.rev;
+var rounds=R.filter(function(r){return r[3]!=='ho'});
+var enrol=0;rounds.forEach(function(r){var x=BUD[r[0]].c.filter(function(c){return c[0]===r[3]})[0];enrol+=x[2]});
+var best=mon.slice().sort(function(a,b){return b.mg-a.mg})[0],worst=mon.slice().sort(function(a,b){return a.mg-b.mg})[0];
+var prices=[];for(var mm=1;mm<=12;mm++)BUD[mm].c.forEach(function(c){prices.push(c[1])});
+var pmin=Math.min.apply(null,prices),pmax=Math.max.apply(null,prices);
+
+document.getElementById('e-subtitle').textContent=rounds.length+' รอบ · 10 หลักสูตร · ผู้เรียนตามแผน '+f(enrol)+' คน-รอบ · ราคาต่อคน '+f(pmin)+'–'+f(pmax)+' บาท';
+
+// ---- KPIs ----
+document.getElementById('e-kpis').innerHTML=
+ '<div class="kpi"><b>'+M(Y.rev)+'</b><span>รายได้รวมทั้งปี 全年总收入</span></div>'+
+ '<div class="kpi"><b>'+M(Y.ex)+'</b><span>ค่าใช้จ่ายรวม 全年总成本</span></div>'+
+ '<div class="kpi hero"><b>'+M(Y.pr)+'</b><span>กำไรขั้นต้น 毛利</span></div>'+
+ '<div class="kpi hero"><b>'+pc(Y.mg)+'</b><span>อัตรากำไรขั้นต้น 毛利率</span></div>';
+
+// ---- 3 messages ----
+var staff=0;for(var q=1;q<=12;q++)staff+=BUD[q].e[3];
+var cb=0,ca=0;rounds.forEach(function(r){var x=BUD[r[0]].c.filter(function(c){return c[0]===r[3]})[0];if(C[r[3]][3]==='b')cb+=x[1]*x[2];else ca+=x[1]*x[2]});
+var be=(Y.ex-12*MEMBER)/Y.cr;
+document.getElementById('e-msgs').innerHTML=
+ '<li><b>ทุกเดือนมีกำไรขั้นต้น</b> ตั้งแต่ '+pc(worst.mg)+' ('+MNF[worst.m-1]+') ถึง '+pc(best.mg)+' ('+MNF[best.m-1]+') เดือนที่ได้น้อยคือเดือนที่เปิดคอร์สน้อยหรือมีวันหยุด</li>'+
+ '<li><b>ค่าใช้จ่ายเกือบคงที่ทุกเดือน</b> ประมาณ 1.17 ล้านบาท บุคลากรเป็นก้อนใหญ่สุด '+pc(staff/Y.ex)+' ของค่าใช้จ่ายทั้งปี กำไรจึงขึ้นกับว่าเปิดคอร์สและรับผู้เรียนได้ตามแผนหรือไม่</li>'+
+ '<li><b>รายได้ค่าคอร์สขั้นสูงมากกว่า</b> ('+pc(ca/Y.cr)+' ขั้นสูง และ '+pc(cb/Y.cr)+' ขั้นพื้นฐาน) และจะถึงจุดคุ้มทุนเมื่อมีผู้เรียนราว '+Math.round(be*100)+'% ของแผน</li>';
+
+// ---- tooltip ----
+var tip=document.getElementById('e-tip');
+function showTip(html,ev){tip.innerHTML=html;tip.style.display='block';moveTip(ev)}
+function moveTip(ev){var x=ev.clientX+14,y=ev.clientY+14;var w=tip.offsetWidth;if(x+w>window.innerWidth-8)x=ev.clientX-w-14;tip.style.left=Math.max(8,x)+'px';tip.style.top=y+'px'}
+function hideTip(){tip.style.display='none'}
+
+// ---- chart 1 ----
+function chart1(){
+  var W=720,H=300,l=46,r=8,t=26,b=26,pw=W-l-r,ph=H-t-b,max=2500000;
+  var y=function(v){return t+ph-v/max*ph},step=pw/12,bw=step*.58;
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="รายได้และค่าใช้จ่ายรายเดือน">';
+  for(var v=0;v<=max;v+=500000){
+    s+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--grid)"/><text x="'+(l-6)+'" y="'+(y(v)+4)+'" text-anchor="end">'+(v/1e6).toFixed(1)+'M</text>';
+  }
+  var line='';
+  mon.forEach(function(d,i){
+    var cx=l+step*i+step/2,x=cx-bw/2,top=y(d.rev);
+    s+='<path d="M'+x+' '+y(0)+'V'+(top+4)+'a4 4 0 0 1 4-4h'+(bw-8)+'a4 4 0 0 1 4 4V'+y(0)+'z" fill="var(--c1)"/>';
+    s+='<text class="pct" x="'+cx+'" y="'+(top-6)+'" text-anchor="middle">'+Math.round(d.mg*100)+'%</text>';
+    s+='<text x="'+cx+'" y="'+(H-8)+'" text-anchor="middle">'+MN[i]+'</text>';
+    line+=(i?'L':'M')+cx+' '+y(d.ex);
+  });
+  s+='<path d="'+line+'" fill="none" stroke="var(--ink)" stroke-width="2"/>';
+  mon.forEach(function(d,i){var cx=l+step*i+step/2;s+='<circle cx="'+cx+'" cy="'+y(d.ex)+'" r="4" fill="var(--ink)" stroke="var(--card)" stroke-width="2"/>'});
+  mon.forEach(function(d,i){
+    var cx=l+step*i;
+    s+='<rect class="hit" data-i="'+i+'" x="'+cx+'" y="'+t+'" width="'+step+'" height="'+ph+'" fill="transparent"/>';
+  });
+  s+='</svg>';
+  var el=document.getElementById('e-c1');el.innerHTML=s;
+  el.querySelectorAll('.hit').forEach(function(h){
+    var d=mon[+h.getAttribute('data-i')];
+    var html='<b>'+MNF[d.m-1]+'</b><br>รายได้ '+f(d.rev)+'<br>ค่าใช้จ่าย '+f(d.ex)+'<br>กำไรขั้นต้น '+f(d.pr)+' ('+pc(d.mg)+')';
+    h.addEventListener('pointerenter',function(e){showTip(html,e)});
+    h.addEventListener('pointermove',moveTip);
+    h.addEventListener('pointerleave',hideTip);
+  });
+  var t1='<table><thead><tr><th>เดือน</th><th>รายได้ค่าคอร์ส</th><th>บัตรสมาชิก</th><th>รายได้รวม</th><th>ค่าใช้จ่ายรวม</th><th>กำไรขั้นต้น</th><th>อัตรากำไร</th></tr></thead><tbody>';
+  mon.forEach(function(d){t1+='<tr><td>'+MNF[d.m-1]+'</td><td>'+f(d.cr)+'</td><td>'+f(MEMBER)+'</td><td>'+f(d.rev)+'</td><td>'+f(d.ex)+'</td><td>'+f(d.pr)+'</td><td>'+pc(d.mg)+'</td></tr>'});
+  t1+='<tr><th>ทั้งปี</th><th>'+f(Y.cr)+'</th><th>'+f(12*MEMBER)+'</th><th>'+f(Y.rev)+'</th><th>'+f(Y.ex)+'</th><th>'+f(Y.pr)+'</th><th>'+pc(Y.mg)+'</th></tr></tbody></table>';
+  document.getElementById('e-t1').innerHTML=t1;
+}
+chart1();
+
+// ---- revenue by course ----
+var byC={};rounds.forEach(function(r){var x=BUD[r[0]].c.filter(function(c){return c[0]===r[3]})[0];var k=r[3];byC[k]=byC[k]||{rev:0,n:0,price:x[1]};byC[k].rev+=x[1]*x[2];byC[k].n++});
+document.getElementById('e-split').innerHTML='<div class="split"><div style="--c:var(--c1);flex:'+cb+'">ขั้นพื้นฐาน '+pc(cb/Y.cr)+'</div><div style="--c:var(--c2);flex:'+ca+'">ขั้นสูง '+pc(ca/Y.cr)+'</div></div>'+
+ '<div style="font-size:.85rem;color:var(--muted)">พื้นฐาน '+M(cb)+' บาท · ขั้นสูง '+M(ca)+' บาท</div>';
+var keys=Object.keys(byC).sort(function(a,b){return byC[b].rev-byC[a].rev}),mx=byC[keys[0]].rev,h='';
+keys.forEach(function(k){var d=byC[k];
+  h+='<div class="br" title="'+C[k][0]+' '+f(d.rev)+' บาท"><div class="nm">'+C[k][0]+'<small>'+d.n+' รอบ</small></div><div class="tr"><div class="fl" style="--c:var(--'+(C[k][3]==='b'?'c1':'c2')+');width:'+(d.rev/mx*100)+'%"></div></div><div class="v">'+f(d.rev)+' <span style="color:var(--muted)">('+pc(d.rev/Y.cr)+')</span></div></div>'});
+document.getElementById('e-courses').innerHTML=h;
+
+// ---- cost structure (typical month) ----
+var ex0=BUD[1].e,tot0=ex0.reduce(function(a,c){return a+c},0),mx0=Math.max.apply(null,ex0),h2='';
+document.getElementById('e-costTotal').textContent=f(tot0);
+ex0.forEach(function(v,i){h2+='<div class="br"><div class="nm">'+CATN[i][0]+'</div><div class="tr"><div class="fl" style="--c:var(--c1);width:'+(v/mx0*100)+'%"></div></div><div class="v">'+f(v)+' <span style="color:var(--muted)">('+pc(v/tot0)+')</span></div></div>'});
+document.getElementById('e-cost').innerHTML=h2;
+
+// ---- gantt ----
+var dim=function(m){return new Date(2027,m,0).getDate()},g='';
+for(var mo=1;mo<=12;mo++){
+  g+='<div class="gr"><div class="m">'+MN[mo-1]+'</div><div class="gt">';
+  R.filter(function(r){return r[0]===mo}).forEach(function(r){
+    var d=dim(mo),left=(r[1]-1)/d*100,w=(r[2]-r[1]+1)/d*100,k=r[3];
+    if(k==='ho'){g+='<div class="gb ho" style="left:'+left+'%;width:'+w+'%" title="'+r[4]+' '+r[1]+' '+MN[mo-1]+'"></div>'}
+    else{var lv=C[k][3];g+='<div class="gb" style="--c:var(--'+(lv==='b'?'c1':'c2')+');left:'+left+'%;width:'+w+'%" title="'+C[k][0]+' · '+r[1]+'–'+r[2]+' '+MN[mo-1]+' ('+(r[2]-r[1]+1)+' วัน)">'+C[k][0]+'</div>'}
+  });
+  g+='</div></div>';
+}
+document.getElementById('e-gantt').innerHTML=g;
+
+// ---- sensitivity ----
+function sens(){
+  var s=+document.getElementById('e-sens').value/100;
+  document.getElementById('e-sensv').textContent=Math.round(s*100)+'%';
+  var rev=Y.cr*s+12*MEMBER,pr=rev-Y.ex,mg=pr/rev;
+  document.getElementById('e-res').innerHTML=
+   '<div><b>'+M(rev)+'</b><span>รายได้รวม</span></div><div><b class="'+(pr<0?'neg':'pos')+'">'+(pr<0?'−':'')+M(Math.abs(pr))+'</b><span>กำไรขั้นต้น</span></div><div><b>'+pc(mg)+'</b><span>อัตรากำไรขั้นต้น</span></div>';
+  document.getElementById('e-be').textContent='จุดคุ้มทุนอยู่ที่ผู้เรียนประมาณ '+(be*100).toFixed(0)+'% ของแผน (รายได้เท่าค่าใช้จ่าย '+f(Y.ex)+' บาท)';
+}
+document.getElementById('e-sens').addEventListener('input',sens);sens();
+
+// ---- watch list ----
+var octFix=40*(16800-12800),octRev=mon[9].rev-octFix,octPr=octRev-mon[9].ex;
+document.getElementById('e-watch').innerHTML=
+ '<li><span class="tag hi">ตรวจสอบ</span><div><b>ราคาดัดร้อนพื้นฐานเดือนตุลาคม</b> ในไฟล์เป็น 16,800 บาท เดือนอื่นเป็น 12,800 บาท ถ้าที่ถูกคือ 12,800 รายได้เดือนตุลาคมลดลง '+f(octFix)+' บาท กำไรเหลือ '+f(octPr)+' บาท ('+pc(octPr/octRev)+') และกำไรทั้งปีลดเหลือ '+M(Y.pr-octFix)+' บาท</div></li>'+
+ '<li><span class="tag hi">ขาดข้อมูล</span><div><b>ภาษีธุรกิจยังไม่อยู่ในงบ</b> ช่อง 营业税 ในไฟล์ว่างทุกเดือน ตัวเลขกำไรจึงยังไม่หักภาษี</div></li>'+
+ '<li><span class="tag">สมมติฐาน</span><div><b>ผู้เรียนเต็มตามแผนทุกรอบ</b> ('+f(enrol)+' คน-รอบ) และบัตรสมาชิกขายได้ '+f(MEMBER)+' บาทต่อเดือนทุกเดือน ถ้าไม่เป็นตามนี้ ใช้แถบเลื่อนด้านบนดูผล</div></li>'+
+ '<li><span class="tag">สมมติฐาน</span><div><b>ค่าใช้จ่ายเป็นตัวเลขตามแผนคงที่</b> ค่าสอนอาจารย์และต้นทุนคอร์สไม่ได้ปรับตามจำนวนผู้เรียนจริง</div></li>'+
+ '<li><span class="tag">ข้อสังเกต</span><div><b>เดือนกุมภาพันธ์และตุลาคม</b> มีวันหยุดตรุษจีนและวันชาติจีน เดือนตุลาคมมีเพียง 2 หลักสูตร กำไรจึงต่ำสุด ('+pc(mon[9].mg)+')</div></li>'+
+ '<li><span class="tag">ข้อสังเกต</span><div><b>กำไรจริงรายเดือน</b> ในไฟล์ยังว่าง เมื่อเริ่มดำเนินการ ควรกรอกเพื่อเทียบกับแผน</div></li>';
+}
+execBuild();priceBuild();expInit();startDb();
+</script>
+
+</body></html>
