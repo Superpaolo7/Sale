@@ -71,6 +71,7 @@ footer{margin-top:26px;color:var(--muted);font-size:.82rem}
 .tab{font:inherit;font-family:var(--font-display);font-weight:500;cursor:pointer;background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-2px;color:var(--muted);padding:8px 16px;white-space:nowrap}
 .tab[aria-pressed="true"]{color:var(--fg);border-bottom-color:var(--accent)}
 .tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+@media (max-width:940px){.tabs{flex-wrap:wrap;overflow:visible;border-bottom:0;gap:6px}.tab{flex:1 1 calc(50% - 6px);white-space:normal;line-height:1.25;border:1px solid var(--line);border-radius:8px;margin:0;padding:8px 10px;text-align:center;background:var(--card)}.tab[aria-pressed="true"]{border-color:var(--accent);background:var(--cell);font-weight:600}}
 .pnote{margin:16px 0 0;color:var(--muted);font-size:.88rem;max-width:80ch}
 .pnote b{color:var(--fg);font-weight:600}
 .ph{font-family:var(--font-display);font-weight:500;font-size:1.1rem;margin:24px 0 8px}
