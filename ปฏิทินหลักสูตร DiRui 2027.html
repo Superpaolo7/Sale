@@ -194,7 +194,28 @@ details.dd summary{cursor:pointer;font-family:var(--font-display);font-weight:50
 #v-exec[hidden]{display:none}
 #v-exec .zh{font-size:.85em;margin-left:6px;font-weight:400;color:var(--muted)}
 #v-exec .sub{margin:0}
-</style>
+/* calendar notes (travel, tentative, teacher placeholders) and teacher lines */
+.it.nt{border-left-color:var(--muted);border-left-style:dotted}
+.tcr{font-weight:600;color:var(--fg);font-size:.82rem}
+.d .t .tcg{display:block;color:var(--muted);font-size:.68rem}
+#v-exec .gb.nt{background:transparent;border:1px dotted var(--muted);color:var(--muted)}
+input.en{font:inherit;width:5.2rem;text-align:right;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--fg);font-variant-numeric:tabular-nums}
+input.en.mod{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--card))}
+input.en:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.tcl{display:block;font-size:.74rem;color:var(--muted);font-weight:400}
+.enbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+#v-rev .rvc{margin-top:16px}
+#v-rev .rvc svg{display:block;width:100%;height:auto;overflow:visible}
+#v-rev .rvc svg text{font-family:var(--font-body);fill:var(--muted);font-size:11px}
+#v-rev .rvc svg text.v{fill:var(--fg);font-weight:600}
+.rvl{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.85rem;color:var(--muted);margin:10px 0 6px}
+.rvl i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.rvl i.ln{height:3px;width:16px;border-radius:0;vertical-align:3px;background:var(--fg)}
+.pt td.neg{color:var(--bad);font-weight:600}
+.ire{align-items:center}
+.ir input.en{width:4.2rem;padding:2px 6px}
+.ir.ire>span:last-child{white-space:nowrap}
+.cpl{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);padding:0 0 6px;font-variant-numeric:tabular-nums}.cpl b{color:var(--fg)}.cpl .neg,.dh .neg{color:#c0392b}.cpl .pos{color:#1e8a4c}</style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600&family=Sarabun:wght@400;600&family=Noto+Sans+SC:wght@400;500&display=swap">
 
 <div class="wrap">
@@ -203,6 +224,7 @@ details.dd summary{cursor:pointer;font-family:var(--font-display);font-weight:50
   <div class="tabs" role="group" aria-label="เลือกหน้า 选择页面">
     <button class="tab" id="tab-s" aria-pressed="true">ตารางเรียน 课程表</button>
     <button class="tab" id="tab-p" aria-pressed="false">ราคาขาย 价格表</button>
+    <button class="tab" id="tab-r" aria-pressed="false">ประมาณการรายได้ 收入预测</button>
     <button class="tab" id="tab-e" aria-pressed="false">ค่าใช้จ่าย 费用</button>
     <button class="tab" id="tab-x" aria-pressed="false">สรุปผู้บริหาร 管理层摘要</button>
   </div>
@@ -215,7 +237,8 @@ details.dd summary{cursor:pointer;font-family:var(--font-display);font-weight:50
   <div id="view"></div>
   </div>
   <div id="v-price" hidden></div>
-  <div id="v-exp" hidden></div>
+  <div id="v-rev" hidden></div>
+<div id="v-exp" hidden></div>
 <div id="v-exec" hidden>
 <p class="sub">ตัวเลขทั้งหมดเป็นงบประมาณตามแผน ไม่ใช่ผลการดำเนินงานจริง · หน่วยเป็นบาท (THB) <span id="e-subtitle"></span></p>
   <section>
@@ -245,7 +268,7 @@ details.dd summary{cursor:pointer;font-family:var(--font-display);font-weight:50
 
   <section class="card">
     <h2>ค่าใช้จ่ายไปอยู่ที่ไหน <span class="zh">成本结构</span></h2>
-    <p class="q">ค่าใช้จ่ายต่อเดือนในเดือนปกติ (ยอดรวม <span id="e-costTotal"></span> บาท) เกือบเท่ากันทุกเดือน</p>
+    <p class="q">ค่าใช้จ่ายต่อเดือนในเดือนปกติ (ยอดรวม <span id="e-costTotal"></span> บาท) เท่ากันทุกเดือน (ใช้งบเดือน ม.ค. เป็นต้นแบบ)</p>
     <div class="bars" id="e-cost"></div>
   </section>
 
@@ -275,7 +298,7 @@ details.dd summary{cursor:pointer;font-family:var(--font-display);font-weight:50
 
   <div id="e-tip" role="tooltip"></div>
 </div>
-  <footer>ชื่ออาจารย์ผู้สอนในไฟล์ต้นฉบับยังไม่กำหนด จึงยังไม่แสดง · ระดับพื้นฐาน/ขั้นสูงแบ่งโดยผู้จัดทำจากชื่อหลักสูตร (ชื่อที่มี Foundation = พื้นฐาน) · ที่มา: ไฟล์ 帝瑞泰国27年课程排期及预算执行表</footer>
+  <footer>ชื่ออาจารย์แสดงตามช่อง 老师 teacher ในตารางเรียนของไฟล์ล่าสุด (ช่องที่ว่างคือยังไม่ระบุ) · ระดับพื้นฐาน/ขั้นสูงแบ่งโดยผู้จัดทำจากชื่อหลักสูตร (ชื่อที่มี Foundation = พื้นฐาน) · ที่มา: ไฟล์ 帝瑞泰国27年课程排期及预算执行表</footer>
 </div>
 
 <script>
@@ -293,20 +316,55 @@ var C={
  sh:['ถ่ายทำ/ตัดต่อ','拍摄/剪辑课程','Shooting & Editing','a'],
  cd:['ออกแบบทรงผม (ตัด-ดัด-ทำสี)','剪裁设计课程（剪烫染）','Cutting & Design (Cut, Perm & Color)','a'],
  ch:['ทำสีขั้นสูง','染发高阶课程','Color High-level','a'],
+ ah:['ดัดร้อนขั้นสูง (Schroeder)','高阶热烫（SCHRODEDR）','Advanced Hot Perm (for Schroeder)','a'],
  ho:['วันหยุด','假期','Holiday','h']
 };
 var HOL={2:['ตรุษจีน','中国新年','Chinese New Year'],10:['วันชาติจีน','中国国庆',"China's National Day"]};
-var R=[[1,1,12,'ps'],[1,25,29,'hp'],[2,4,4,'ho'],[2,8,8,'ho'],[2,15,19,'st'],[2,22,24,'cp'],
-[3,1,12,'cu'],[3,15,17,'mc'],[3,29,31,'sh'],[4,5,16,'ps'],[4,19,23,'co'],[4,26,30,'hp'],
-[5,3,5,'cd'],[5,10,14,'st'],[5,24,26,'ch'],[6,1,10,'cu'],[6,14,16,'mc'],[6,28,30,'sh'],
-[7,1,12,'ps'],[7,19,23,'hp'],[7,26,30,'co'],[8,2,4,'cp'],[8,9,13,'st'],[8,16,18,'ch'],
-[9,1,10,'cu'],[9,13,15,'mc'],[9,27,29,'sh'],[10,1,1,'ho'],[10,4,4,'ho'],[10,11,22,'ps'],[10,25,29,'hp'],
-[11,1,5,'co'],[11,8,10,'cd'],[11,22,24,'ch'],[12,1,10,'cu'],[12,13,15,'mc'],[12,27,29,'sh']];
+var R=[[1,12,16,'hp','佩佩/girl'],
+[1,19,24,'nt','','จองเวลาบุคลากร 19–24 ม.ค.: Schroeder Thailand มีคลาสเรียนที่จีน (ไม่รวมค่าใช้จ่าย)','人员时间预留：施洛德泰国赴中国上课（不计费用）','Staff time blocked, 19–24 Jan: Schroeder Thailand class in China (no cost included)'],
+[1,25,29,'st','敏少/boy'],
+[2,4,4,'ho'],
+[2,8,8,'ho'],
+[2,12,23,'ps','小瑞/小波'],
+[2,25,26,'sh','阿昊'],
+[3,1,10,'cu','待定'],
+[3,15,17,'mc','CJ'],
+[3,24,26,'sh','小安'],
+[3,29,31,'nt','','อาจารย์ Mao (DiRui หรือ Schroeder)','毛老师（DIRUI或SCHRODEDR）','Teacher Mao (DiRui or Schroeder)'],
+[4,5,7,'cd','C罗'],
+[4,19,23,'co','黎韧/小波'],
+[4,26,30,'hp','佩佩/girl'],
+[5,10,14,'st','敏少/boy'],
+[5,17,19,'ah','李思慧'],
+[5,24,26,'ch','阿光'],
+[6,1,12,'ps','小瑞/小波'],
+[6,15,17,'mc','CJ'],
+[6,28,30,'sh','小安'],
+[7,1,10,'cu',''],
+[7,19,21,'cd','C罗'],
+[7,22,22,'nt','','ชั่วคราว: ตัด-ดัดเชิงพาณิชย์ ของ Schroeder','暂定施洛德商业剪烫 for SCHRODEDR','Tentative: Schroeder commercial cut & perm'],
+[7,26,30,'co','黎韧/小波'],
+[8,2,4,'nt','','อาจารย์ Mao','毛老师','Teacher Mao'],
+[8,9,13,'st','敏少'],
+[8,23,25,'ch','阿光'],
+[9,1,12,'ps','小瑞/小波'],
+[9,13,15,'mc','CJ'],
+[9,27,29,'sh','小安'],
+[10,1,1,'ho'],
+[10,4,4,'ho'],
+[10,11,20,'cu','待定'],
+[10,25,29,'hp','佩佩/girl'],
+[11,1,5,'co','黎韧/小波'],
+[11,8,10,'cd','C罗'],
+[11,22,24,'ah','李思慧'],
+[12,1,12,'ps','小瑞/小波'],
+[12,13,15,'mc','CJ'],
+[12,20,22,'ch','阿光']];
 var LVN={b:['ขั้นพื้นฐาน','基础'],a:['ขั้นสูง','进阶']};
 /* topic of each class: colored tag + icon. mix = combines several skills */
 var CAT={cut:['ตัด','剪'],perm:['ดัด','烫'],color:['ทำสี','染'],style:['จัดแต่งทรง','造型'],media:['ถ่ายทำ/ตัดต่อ','拍摄'],mix:['ผสมหลายทักษะ','综合']};
-var TAGS={ps:['perm','color'],hp:['perm'],st:['style'],co:['color'],cu:['cut'],cp:['cut','perm'],mc:['cut','perm'],sh:['media'],cd:['cut','perm','color'],ch:['color']};
-var PRIM={ps:'mix',hp:'perm',st:'style',co:'color',cu:'cut',cp:'mix',mc:'mix',sh:'media',cd:'mix',ch:'color'};
+var TAGS={ps:['perm','color'],hp:['perm'],st:['style'],co:['color'],cu:['cut'],cp:['cut','perm'],mc:['cut','perm'],sh:['media'],cd:['cut','perm','color'],ch:['color'],ah:['perm']};
+var PRIM={ps:'mix',hp:'perm',st:'style',co:'color',cu:'cut',cp:'mix',mc:'mix',sh:'media',cd:'mix',ch:'color',ah:'perm'};
 var IC={
  ps:'<path d="M12 12a1.5 1.5 0 1 1 3 0 4 4 0 1 1-8 0 6.5 6.5 0 1 1 13 0"/>',
  hp:'<path d="M12 3c1 3 4 4.5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.5 2 1.5 2 0-3-1-4 .5-7z"/>',
@@ -317,6 +375,7 @@ var IC={
  cp:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 8l11.5 10M8.5 16L20 6"/><path d="M17 4v4M15 6h4"/>',
  mc:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 8l11.5 10M8.5 16L20 6"/><path d="M16 20h5"/>',
  sh:'<rect x="3" y="7" width="18" height="12" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 7l1.5-3h5L16 7"/>',
+ ah:'<path d="M12 3c1 3 4 4.5 4 9a4 4 0 0 1-8 0c0-2 1-3 2-4 0 1.5.5 2 1.5 2 0-3-1-4 .5-7z"/><path d="M19 3v4M17 5h4"/>',
  cd:'<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>'
 };
 var CATIC={cut:'cu',perm:'ps',color:'co',style:'st',media:'sh',mix:'cd'};
@@ -328,16 +387,21 @@ try{var sm=sessionStorage.getItem('dm');if(sm!==null)selM=+sm}catch(e){}
 
 function info(r){
   var k=r[3],c=C[k];
-  if(k==='ho'){var h=HOL[r[0]];return {th:h[0],zh:h[1],en:h[2],lv:'h',k:'ho',prim:'',tags:[]}}
-  return {th:c[0],zh:c[1],en:c[2],lv:c[3],k:k,prim:PRIM[k],tags:TAGS[k]};
+  if(k==='ho'){var h=HOL[r[0]];return {th:h[0],zh:h[1],en:h[2],lv:'h',k:'ho',prim:'',tags:[],tc:''}}
+  if(k==='nt')return {th:r[5],zh:r[6],en:r[7],lv:'n',k:'nt',prim:'',tags:[],tc:r[4]||''};
+  return {th:c[0],zh:c[1],en:c[2],lv:c[3],k:k,prim:PRIM[k],tags:TAGS[k],tc:r[4]||''};
 }
 function hue(lv){return lv==='b'?'var(--c1)':lv==='a'?'var(--c2)':'var(--bad)'}
-function ccol(i){return i.lv==='h'?'var(--bad)':'var(--t-'+i.prim+')'}
-function vis(i){return i.lv==='h'||((!selL||i.lv===selL)&&(!selT||i.tags.indexOf(selT)>=0))}
+function ccol(i){return i.lv==='h'?'var(--bad)':i.lv==='n'?'var(--muted)':'var(--t-'+i.prim+')'}
+function vis(i){return i.lv==='h'||i.lv==='n'||((!selL||i.lv===selL)&&(!selT||i.tags.indexOf(selT)>=0))}
+/* teacher names: Chinese as in the file + pinyin + Thai reading */
+var TCH={'佩佩':['Peipei','เผ่ยเผย'],'敏少':['Minshao','หมิ่นเส้า'],'小瑞':['Xiaorui','เสี่ยวรุ่ย'],'小波':['Xiaobo','เสี่ยวป๋อ'],'阿昊':['Ahao','อาห่าว'],'CJ':['CJ','ซีเจ'],'小安':['Xiao An','เสี่ยวอัน'],'C罗':['C Luo','ซี หลัว'],'黎韧':['Li Ren','หลี เริ่น'],'阿光':['Aguang','อากวง'],'李思慧':['Li Sihui','หลี่ ซือฮุ่ย']};
+function tcn(t){return String(t).split('/').map(function(x){x=x.trim();if(x==='待定')return '待定 TBD (รอกำหนด)';if(x==='girl')return '助教(女) ผู้ช่วยหญิง (assistant, female)';if(x==='boy')return '助教(男) ผู้ช่วยชาย (assistant, male)';var h=TCH[x];return h?x+' '+h[0]+' ('+h[1]+')':x}).join(' / ')}
+function tcs(t){return String(t).split('/').map(function(x){x=x.trim();if(x==='待定')return 'TBD รอกำหนด';if(x==='girl')return 'ผู้ช่วยหญิง';if(x==='boy')return 'ผู้ช่วยชาย';var h=TCH[x];return h?h[0]+' '+h[1]:x}).join(' / ')}
 function days(m){return new Date(2027,m,0).getDate()}
 function rng(r,m){return r[1]===r[2]?r[1]+' '+MN[m-1]:r[1]+'–'+r[2]+' '+MN[m-1]}
 function runsOf(m){return R.filter(function(r){return r[0]===m})}
-function pill(lv){return lv==='h'?'':'<span class="pill">'+LVN[lv][0]+' '+LVN[lv][1]+'</span>'}
+function pill(lv){return (lv==='h'||lv==='n')?'':'<span class="pill">'+LVN[lv][0]+' '+LVN[lv][1]+'</span>'}
 
 function listHTML(m){
   var rs=runsOf(m);
@@ -346,8 +410,8 @@ function listHTML(m){
   rs.forEach(function(r){
     var i=info(r),n=r[2]-r[1]+1;
     var hide=!vis(i)?' display:none':'';
-    s+='<div class="it'+(i.lv==='h'?' ho':'')+'" style="--c:'+ccol(i)+';'+hide+'"><div class="dt">'+rng(r,m)+'<small>'+(i.lv==='h'?'หยุด 休息':n+' วัน '+n+'天')+'</small></div>'+
-       '<div class="nm"><b>'+(i.k==='ho'?'':svgi(i.k,'ic big'))+i.th+'</b>'+pill(i.lv)+'<span class="tgs">'+(i.k==='ho'?'':tagsHTML(i.k))+'</span><span><span class="zh">'+i.zh+'</span> · '+i.en+'</span></div></div>';
+    s+='<div class="it'+(i.lv==='h'?' ho':i.lv==='n'?' nt':'')+'" style="--c:'+ccol(i)+';'+hide+'"><div class="dt">'+rng(r,m)+'<small>'+(i.lv==='h'?'หยุด 休息':i.lv==='n'?'หมายเหตุ 备注':n+' วัน '+n+'天')+'</small></div>'+
+       '<div class="nm"><b>'+((i.k==='ho'||i.k==='nt')?'':svgi(i.k,'ic big'))+i.th+'</b>'+pill(i.lv)+'<span class="tgs">'+((i.k==='ho'||i.k==='nt')?'':tagsHTML(i.k))+'</span><span><span class="zh">'+i.zh+'</span> · '+i.en+(i.tc?'<br><b class="tcr">ผู้สอน 老师 · '+esc(tcn(i.tc))+'</b>':'')+'</span></div></div>';
   });
   return s+'</div>';
 }
@@ -362,7 +426,7 @@ function gridHTML(m){
     if(!o){s+='<div class="d"><span class="n">'+d+'</span></div>';continue}
     var i=info(o.r),cls='d '+(i.lv==='h'?'ho':'on')+(vis(i)?'':' dim');
     var show=o.start||wd===0;
-    s+='<div class="'+cls+'" style="--c:'+ccol(i)+'" title="'+i.th+' · '+i.zh+' · '+i.en+'"><span class="n">'+d+'</span>'+(i.k==='ho'?'':svgi(i.k,'gi'))+(show?'<span class="t">'+i.th+'<small class="zh">'+i.zh+'</small></span>':'')+'</div>';
+    s+='<div class="'+cls+'" style="--c:'+ccol(i)+'" title="'+esc(i.th+' · '+i.zh+' · '+i.en+(i.tc?' · ผู้สอน '+tcn(i.tc):''))+'"><span class="n">'+d+'</span>'+((i.k==='ho'||i.k==='nt')?'':svgi(i.k,'gi'))+(show?'<span class="t">'+i.th+'<small class="zh">'+i.zh+'</small>'+(i.tc?'<small class="tcg">'+esc(tcs(i.tc))+'</small>':'')+'</span>':'')+'</div>';
   }
   return s+'</div>';
 }
@@ -401,44 +465,64 @@ function render(){
   });
   var v=document.getElementById('view');
   if(selM===0){v.innerHTML=yearHTML();return}
-  var n=runsOf(selM).filter(function(r){return r[3]!=='ho'}).length;
+  var n=runsOf(selM).filter(function(r){return r[3]!=='ho'&&r[3]!=='nt'}).length;
   v.innerHTML='<div class="head"><h2>'+MNF[selM-1]+' 2027 <span class="zh" style="color:var(--muted);font-weight:400;font-size:.7em">'+selM+'月</span></h2><span>'+n+' หลักสูตร '+n+'门课程</span></div>'+gridHTML(selM)+listHTML(selM);
 }
-var nr=R.filter(function(r){return r[3]!=='ho'}).length;
-document.getElementById('sub').textContent=nr+' รอบ · 10 หลักสูตร · เปิดสอนทุกเดือน ยกเว้นช่วงตรุษจีนและวันชาติจีน';
+var nr=R.filter(function(r){return r[3]!=='ho'&&r[3]!=='nt'}).length;
+document.getElementById('sub').textContent=nr+' รอบ · '+Object.keys(R.filter(function(r){return r[3]!=='ho'&&r[3]!=='nt'}).reduce(function(a,r){a[r[3]]=1;return a},{})).length+' หลักสูตร · เปิดสอนทุกเดือน ยกเว้นช่วงตรุษจีนและวันชาติจีน';
 render();
 
 /* ================= budget data (from the Excel file) ================= */
-var MEMBER=139950;
+var MB=[79970,79970,79970,79970,79970,79970,79970,79970,79970,79970,79970,79970] /* every month uses January: 3,999 x 10 + 1,999 x 20 = 30 cards */,MEMY=MB.reduce(function(a,c){return a+c},0);
+function mc(m){var o=OV['mem-'+m]||{};return [o.c1!=null?o.c1:10,o.c2!=null?o.c2:20]}
 var BUD={
-1:{c:[['ps',22500,50],['hp',12800,50]],e:[161000,80500,46000,690000,140000,55000]},
-2:{c:[['st',12800,50],['cp',16800,50]],e:[161000,65500,36000,570000,140000,55000]},
-3:{c:[['cu',22500,50],['mc',16800,30],['sh',16800,30]],e:[161000,80500,46000,690000,140000,55000]},
-4:{c:[['ps',22500,40],['co',12800,40],['hp',12800,40]],e:[161000,80500,46000,690000,140000,55000]},
-5:{c:[['cd',19800,40],['st',12800,40],['ch',16800,40]],e:[161000,80500,46000,690000,140000,55000]},
-6:{c:[['cu',22500,40],['mc',16800,30],['sh',16800,30]],e:[161000,80500,46000,690000,140000,55000]},
-7:{c:[['ps',22500,30],['hp',12800,40],['co',12800,40]],e:[161000,80500,46000,690000,140000,55000]},
-8:{c:[['cp',16800,40],['st',12800,30],['ch',16800,40]],e:[161000,80500,46000,690000,140000,55000]},
-9:{c:[['cu',22500,30],['mc',16800,40],['sh',16800,40]],e:[161000,80500,46000,690000,140000,55000]},
-10:{c:[['ps',22500,40],['hp',16800,40]],e:[161000,80500,46000,690000,140000,55000]},
-11:{c:[['co',12800,40],['cd',19800,40],['ch',16800,40]],e:[161000,80500,46000,690000,140000,55000]},
-12:{c:[['cu',22500,40],['mc',16800,30],['sh',16800,30]],e:[161000,80500,46000,690000,140000,55000]}};
+1:{c:[['hp',12800,30],['st',12800,30]],e:[221000,35000,26000,506000,101000,35000]},
+2:{c:[['ps',22500,50],['sh',16800,50]],e:[221000,35000,26000,506000,101000,35000]},
+3:{c:[['cu',22500,50],['mc',16800,30],['sh',16800,30]],e:[221000,35000,26000,506000,101000,35000]},
+4:{c:[['cd',19800,40],['co',12800,40],['hp',12800,40]],e:[221000,35000,26000,506000,101000,35000]},
+5:{c:[['st',12800,40],['ch',16800,40]],e:[221000,35000,26000,506000,101000,35000]},
+6:{c:[['ps',22500,40],['mc',16800,30],['sh',16800,30]],e:[221000,35000,26000,506000,101000,35000]},
+7:{c:[['cu',22500,30],['cd',19800,40],['co',12800,40]],e:[221000,35000,26000,506000,101000,35000]},
+8:{c:[['st',12800,30],['ch',16800,40]],e:[221000,35000,26000,506000,101000,35000]},
+9:{c:[['ps',22500,30],['mc',16800,40],['sh',16800,40]],e:[221000,35000,26000,506000,101000,35000]},
+10:{c:[['cu',22500,40],['hp',16800,40]],e:[221000,35000,26000,506000,101000,35000]},
+11:{c:[['co',12800,40],['cd',19800,40]],e:[221000,35000,26000,506000,101000,35000]},
+12:{c:[['ps',22500,40],['mc',16800,30],['ch',16800,30]],e:[221000,35000,26000,506000,101000,35000]}};
+/* default price / headcount per class, from the file (Jan) and the assumption described on the pages; the advanced hot perm class (ah) has none.
+   OV holds the edits made on the price page (shared through the db): key 'month-startday' -> {hc, p} */
+var DEF={};for(var dm0=1;dm0<=12;dm0++)DEF[dm0]=BUD[dm0].c.slice();
+DEF[5].push(['ah',null,null]);DEF[11].push(['ah',null,null]);
+var OV={},RB=[];
+function rid(r){return r[0]+'-'+r[1]}
+function rebuild(){
+  for(var q=1;q<=12;q++){
+    BUD[q].c=R.filter(function(r){return r[0]===q&&r[3]!=='ho'&&r[3]!=='nt'&&r[3]!=='ah'}).map(function(r){
+      var d=DEF[q].filter(function(x){return x[0]===r[3]})[0]||[r[3],null,null],o=OV[rid(r)]||{};
+      return [r[3],o.p!=null?o.p:d[1],o.hc!=null?o.hc:d[2],rid(r)];
+    });
+  }
+  RB=R.filter(function(r){return r[3]!=='ho'&&r[3]!=='nt'&&r[3]!=='ah'&&BUD[r[0]].c.some(function(c){return c[0]===r[3]&&c[1]&&c[2]})});
+  for(var q2=1;q2<=12;q2++){var k2=mc(q2);MB[q2-1]=k2[0]*3999+k2[1]*1999}
+  MEMY=MB.reduce(function(a,c){return a+c},0);
+}
+rebuild();
 var EXPN=[["ค่าใช้จ่ายคงที่ (เช่า น้ำไฟ)","固定开支"],["ต้นทุนคอร์สพื้นฐาน","课程基本成本"],["การตลาด","市场运营推广"],["บุคลากร (อาจารย์ ผู้ช่วย ทีมงาน)","人员开支"],["เดินทาง/ที่พักบุคลากร","人员交通差旅"],["อุปกรณ์/สินทรัพย์","日常消耗品/固定资产"]];
 var CATN=EXPN.concat([["อื่นๆ","其他"]]);
 var ADD={},EXPS=[],coll=null,writable=true,openM=null;
 /* line items per category, as in the Excel budget sheets: [Thai, Chinese, [normal month, February]] ; null = left blank in the file */
 var ITEMS=[
- [["ค่าเช่า (รวมค่าบริหารอาคาร)","房租",[141000]],["ค่าน้ำ-ค่าไฟ","水电",[20000]],["ภาษีธุรกิจ","营业税",[null]]],
- [["ผลิตภัณฑ์/วัสดุสำหรับคอร์ส","课程产品所需",[50000,40000]],["สมุดโน้ตผู้เรียน","学员笔记本",[3000]],["ใบประกาศนียบัตร","毕业证",[20000,15000]],["ป้ายชื่อผู้เรียน","学员名牌",[7500]]],
- [["ค่าตัดต่อวิดีโอสั้น","短视频剪辑费用",[6000]],["ค่ารับรองทั่วไป","日常招待费",[40000,30000]]],
- [["ค่าสอนอาจารย์ (รายชั่วโมง)","老师课时费",[450000,350000]],["ค่าสอนผู้ช่วยอาจารย์","助教老师",[75000,55000]],["เงินเดือนพนักงานประจำสถาบัน","学校固定人员工资",[40000]],["เงินเดือนฝ่ายการเงิน","财务人员工资",[30000]],["เงินเดือนล่าม","翻译人员工资",[60000]],["เงินเดือนแม่บ้าน","清洁工工资",[15000]],["ค่าใช้จ่ายทีมงานช่วงเปิดคอร์ส","开课期间工作人员费用",[20000]]],
- [["ตั๋วเครื่องบินอาจารย์และผู้ช่วย","老师和助教老师机票",[100000]],["ค่าเช่าที่พักบุคลากรจากจีน","中国人员租房房租",[20000]],["ค่าอาหารอาจารย์ช่วงสอน","老师课程餐食",[10000]],["ค่าเดินทางในเมือง","市内交通",[10000]],["ค่าวีซ่าอาจารย์จีน","中国老师签证费用",[null]]],
- [["เครื่องพิมพ์","打印机",[35000]],["โต๊ะ","桌子",[10000]],["เก้าอี้","椅子",[10000]]]
+ [["ค่าเช่า (รวมค่าบริหารอาคาร)","房租",[141000],141000],["ค่าน้ำ-ค่าไฟ","水电",[20000],80000],["ภาษีธุรกิจ","营业税",[null],null]],
+ [["ผลิตภัณฑ์/วัสดุสำหรับคอร์ส","课程产品所需",[50000,40000],20000],["สมุดโน้ตผู้เรียน","学员笔记本",[3000],3000],["ใบประกาศนียบัตร","毕业证",[20000,15000],10000],["ป้ายชื่อผู้เรียน","学员名牌",[7500],2000]],
+ [["ค่าตัดต่อวิดีโอสั้น","短视频剪辑费用",[6000],6000],["ค่ารับรองทั่วไป","日常招待费",[40000,30000],20000]],
+ [["ค่าสอนอาจารย์ (รายชั่วโมง)","老师课时费",[450000,350000],210000],["ค่าสอนผู้ช่วยอาจารย์","助教老师",[75000,55000],36000],["เงินเดือนพนักงานประจำสถาบัน","学校固定人员工资",[40000],40000],["เงินเดือนฝ่ายการเงิน","财务人员工资",[30000],30000],["เงินเดือนล่าม","翻译人员工资",[60000],60000],["เงินเดือนแม่บ้าน","清洁工工资",[15000],15000],["ค่าใช้จ่ายทีมงานช่วงเปิดคอร์ส","开课期间工作人员费用",[20000],false],["พนักงานขาย","销售",[false],35000],["การตลาดออนไลน์ (ถ่ายทำ)","互联网营销（拍摄）",[false],30000],["ผู้จัดการบริหารสถาบัน","学校运营管理",[false],50000]],
+ [["ตั๋วเครื่องบินอาจารย์และผู้ช่วย","老师和助教老师机票",[100000],60000],["ค่าเช่าที่พักบุคลากรจากจีน","中国人员租房房租",[20000],21000],["ค่าอาหารอาจารย์ช่วงสอน","老师课程餐食",[10000],10000],["ค่าเดินทางในเมือง","市内交通",[10000],10000],["ค่าวีซ่าอาจารย์จีน","中国老师签证费用",[null],null]],
+ [["เครื่องพิมพ์","打印机",[35000],10000],["โต๊ะ","桌子",[10000],5000],["เก้าอี้","椅子",[10000],5000],["กล้องถ่ายรูป","照相机",[false],10000],["แอปบัตรสมาชิก","会员卡APP",[false],5000]]
 ];
-function itemAmt(m,ci,ii){var v=ITEMS[ci][ii][2];return (m===2&&v.length>1)?v[1]:v[0]}
+/* it[3] = amount per month (January sheet used as the template for all months); false = not in the sheet, null = left blank */
+function itemAmt(m,ci,ii){return ITEMS[ci][ii][3]} /* every month uses the January sheet as its template */
 function itemTot(m,ci,ii){
   if(m!=='Y')return itemAmt(m,ci,ii);
-  var s=0,any=false;for(var q=1;q<=12;q++){var v=itemAmt(q,ci,ii);if(v!==null){s+=v;any=true}}return any?s:null;
+  var s=0,any=false;for(var q=1;q<=12;q++){var v=itemAmt(q,ci,ii);if(v!==null&&v!==false){s+=v;any=true}}return any?s:(m==='Y'&&ITEMS[ci][ii][2][0]===false&&ITEMS[ci][ii][3]===false?false:null);
 }
 function detHTML(m){
   var list=EXPS.filter(function(e){return m==='Y'||e.m===m});
@@ -447,6 +531,7 @@ function detHTML(m){
     var sub=0,rows='';
     cat.forEach(function(it,ii){
       var v=itemTot(m,ci,ii);
+      if(v===false)return;
       if(v===null)rows+='<div class="ir"><span>'+it[0]+' <span class="zh">'+it[1]+'</span></span><span class="na">ไม่ได้ใส่ในงบ</span></div>';
       else{sub+=v;rows+='<div class="ir"><span>'+it[0]+' <span class="zh">'+it[1]+'</span></span><span>'+f(v)+'</span></div>'}
     });
@@ -471,28 +556,29 @@ function f(n){return Math.round(n).toLocaleString('en-US')}
 function pc(x){return (x*100).toFixed(1)+'%'}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function baseEx(m){return BUD[m].e.reduce(function(a,c){return a+c},0)}
-function calc(m){var cr=0;BUD[m].c.forEach(function(x){cr+=x[1]*x[2]});var extra=ADD[m]||0,ex=baseEx(m)+extra,rev=cr+MEMBER;return{cr:cr,rev:rev,ex:ex,extra:extra,pr:rev-ex,mg:(rev-ex)/rev}}
+function calc(m){var cr=0;BUD[m].c.forEach(function(x){cr+=x[1]*x[2]});var extra=ADD[m]||0,ex=baseEx(m)+extra,rev=cr+MB[m-1];return{cr:cr,rev:rev,ex:ex,extra:extra,pr:rev-ex,mg:(rev-ex)/rev}}
 function ico(k){return '<svg class="ic" style="--c:var(--t-'+PRIM[k]+')" viewBox="0 0 24 24" aria-hidden="true">'+IC[k]+'</svg>'}
 
 /* ================= price page ================= */
 function priceRows(){
   var out=[];
   R.forEach(function(r){
-    if(r[3]==='ho')return;
-    var b=BUD[r[0]].c.filter(function(x){return x[0]===r[3]})[0];
-    out.push({m:r[0],a:r[1],z:r[2],k:r[3],p:b[1],hc:b[2],d:r[2]-r[1]+1});
+    if(r[3]==='ho'||r[3]==='nt'||r[3]==='ah')return;
+    var b=BUD[r[0]].c.filter(function(x){return x[0]===r[3]})[0],d=DEF[r[0]].filter(function(x){return x[0]===r[3]})[0]||[];
+    out.push({m:r[0],a:r[1],z:r[2],k:r[3],p:b[1],hc:b[2],d:r[2]-r[1]+1,id:rid(r),dp:d[1],dh:d[2],tc:r[4]||''});
   });
   return out;
 }
 function rg(a,b){return a===b?f(a):f(a)+'–'+f(b)}
 function priceBuild(){
   var all=priceRows(),s='';
-  s+='<p class="pnote"><b>ราคาต่อคน 单价</b> คือราคาขายต่อหลักสูตร 1 รอบ ตามช่อง "单价 Unit Price" ในไฟล์ · <b>ต่อวัน</b> = ราคา ÷ จำนวนวันเรียนของรอบนั้น (นับตามช่วงวันที่ในตาราง รวมเสาร์–อาทิตย์ที่อยู่ในช่วง) · <b>ต่อคลาส</b> = รายได้ต่อรอบ = ราคา × ผู้เรียนตามแผน 招生人数 · ราคาในไฟล์เป็นราคาเต็ม ยังไม่รวมส่วนลดบัตรสมาชิก</p>';
+  s+='<p class="pnote"><b>ราคาต่อคน 单价</b> คือราคาขายต่อหลักสูตร 1 รอบ ตามช่อง "单价 Unit Price" ในไฟล์ · <b>ต่อวัน</b> = ราคา ÷ จำนวนวันเรียนของรอบนั้น (นับตามช่วงวันที่ในตาราง รวมเสาร์–อาทิตย์ที่อยู่ในช่วง) · <b>ต่อคลาส</b> = รายได้ต่อรอบ = ราคา × ผู้เรียนตามแผน 招生人数 · ราคาในไฟล์เป็นราคาเต็ม ยังไม่รวมส่วนลดบัตรสมาชิก · <b>ประมาณรายได้</b> แก้จำนวนผู้เรียนของแต่ละรอบในตารางรายรอบด้านล่างได้ รายได้ = ราคา × จำนวนผู้เรียน และหน้าค่าใช้จ่ายกับสรุปผู้บริหารคำนวณใหม่ทันที ค่าที่แก้บันทึกไว้ให้ทุกคนที่เปิดลิงก์นี้เห็นเหมือนกัน ช่องที่ไม่ได้แก้ใช้จำนวนตามแผน (คลาสที่ย้ายเข้ามาใช้จำนวนของคลาสที่ถูกแทนในเดือนเดียวกัน) คลาสดัดร้อนขั้นสูงของ Schroeder ยังไม่มีราคาในไฟล์ กรอกราคาเองได้</p>';
   s+='<h2 class="ph">สรุปรายหลักสูตร <small>各课程价格汇总</small></h2><div class="tw"><table class="pt"><thead><tr><th>หลักสูตร<small>课程</small></th><th>ราคาต่อคน<small>单价 (บาท)</small></th><th>วันเรียน<small>天数</small></th><th>ต่อคนต่อวัน<small>每人每天</small></th><th>ผู้เรียนตามแผน<small>招生人数</small></th><th>รายได้ต่อคลาส<small>每班收入</small></th><th>จำนวนรอบ<small>期数</small></th></tr></thead><tbody>';
   ['b','a'].forEach(function(l){
     s+='<tr class="lvrow"><td colspan="7">'+LVN[l][0]+' '+LVN[l][1]+'</td></tr>';
-    Object.keys(C).filter(function(k){return k!=='ho'&&C[k][3]===l}).forEach(function(k){
-      var rs=all.filter(function(x){return x.k===k});
+    Object.keys(C).filter(function(k){return k!=='ho'&&C[k][3]===l&&all.some(function(x){return x.k===k})}).forEach(function(k){
+      var rs=all.filter(function(x){return x.k===k&&x.p&&x.hc});
+      if(!rs.length){s+='<tr><td>'+ico(k)+C[k][0]+' <span class="zh" style="color:var(--muted)">'+C[k][1]+'</span></td><td colspan="6" class="na" style="text-align:left">ยังไม่มีราคาหรือจำนวนผู้เรียน กรอกได้ในตารางรายรอบด้านล่าง</td></tr>';return}
       var P=rs.map(function(x){return x.p}),D=rs.map(function(x){return x.d}),PD=rs.map(function(x){return x.p/x.d}),H=rs.map(function(x){return x.hc}),V=rs.map(function(x){return x.p*x.hc});
       var mn=function(a){return Math.min.apply(null,a)},mx=function(a){return Math.max.apply(null,a)};
       s+='<tr>'+'<td>'+ico(k)+C[k][0]+' <span class="zh" style="color:var(--muted)">'+C[k][1]+'</span></td>'+
@@ -501,15 +587,85 @@ function priceBuild(){
     });
   });
   s+='</tbody></table></div>';
-  s+='<h2 class="ph">รายรอบตลอดปี <small>全年各期明细</small></h2><div class="tw"><table class="pt"><thead><tr><th>หลักสูตร<small>课程</small></th><th class="l">วันที่<small>日期</small></th><th>ราคาต่อคน<small>单价</small></th><th>วันเรียน<small>天数</small></th><th>ต่อคนต่อวัน<small>每人每天</small></th><th>ผู้เรียนตามแผน<small>人数</small></th><th>รายได้ต่อคลาส<small>每班收入</small></th></tr></thead><tbody>';
-  var last=0;
+  s+='<h2 class="ph">รายรอบตลอดปี <small>全年各期明细</small></h2><div class="tw"><table class="pt"><thead><tr><th>หลักสูตร<small>课程</small></th><th class="l">วันที่<small>日期</small></th><th>ราคาต่อคน<small>单价</small></th><th>วันเรียน<small>天数</small></th><th>ต่อคนต่อวัน<small>每人每天</small></th><th>จำนวนผู้เรียน (แก้ได้)<small>人数 可修改</small></th><th>รายได้ที่ประมาณ<small>预计收入</small></th></tr></thead><tbody>';
+  var last=0,mrev={},tot=0,tn=0;
+  all.forEach(function(x){if(x.p&&x.hc){mrev[x.m]=(mrev[x.m]||0)+x.p*x.hc;tot+=x.p*x.hc;tn+=x.hc}});
   all.forEach(function(x){
-    if(x.m!==last){s+='<tr class="lvrow"><td colspan="7">'+MNF[x.m-1]+' '+x.m+'月 2027</td></tr>';last=x.m}
-    var odd=x.k==='hp'&&x.p!==12800;
-    s+='<tr><td>'+ico(x.k)+C[x.k][0]+'</td><td class="l">'+(x.a===x.z?x.a:x.a+'–'+x.z)+' '+MN[x.m-1]+'</td><td class="big'+(odd?' flag':'')+'">'+f(x.p)+'</td><td>'+x.d+'</td><td>'+f(x.p/x.d)+'</td><td>'+x.hc+'</td><td>'+f(x.p*x.hc)+'</td></tr>';
+    if(x.m!==last){s+='<tr class="lvrow"><td colspan="6">'+MNF[x.m-1]+' '+x.m+'月 2027</td><td>'+(mrev[x.m]?f(mrev[x.m]):'—')+'</td></tr>';last=x.m}
+    var odd=x.k==='hp'&&x.p&&x.p!==12800,o=OV[x.id]||{},noP=x.dp==null;
+    var pc2=noP?'<input class="en" type="number" min="0" step="100" inputmode="numeric" data-id="'+x.id+'" data-f="p" value="'+(x.p==null?'':x.p)+'" placeholder="ราคา" aria-label="ราคาต่อคน '+C[x.k][0]+' '+x.a+' '+MN[x.m-1]+'">':f(x.p);
+    var hcv='<input class="en'+(o.hc!=null?' mod':'')+'" type="number" min="0" max="500" step="1" inputmode="numeric" data-id="'+x.id+'" data-f="hc" value="'+(x.hc==null?'':x.hc)+'" placeholder="คน" aria-label="จำนวนผู้เรียน '+C[x.k][0]+' '+x.a+' '+MN[x.m-1]+'">';
+    s+='<tr><td>'+ico(x.k)+C[x.k][0]+(x.tc?'<small class="tcl">'+esc(tcs(x.tc))+'</small>':'')+'</td><td class="l">'+(x.a===x.z?x.a:x.a+'–'+x.z)+' '+MN[x.m-1]+'</td><td class="big'+(odd?' flag':'')+'">'+pc2+'</td><td>'+x.d+'</td><td>'+(x.p?f(x.p/x.d):'—')+'</td><td>'+hcv+'</td><td>'+(x.p&&x.hc?f(x.p*x.hc):'—')+'</td></tr>';
   });
+  s+='<tr class="sumrow"><td colspan="5">รวมทั้งปี 全年合计</td><td>'+f(tn)+'</td><td>'+f(tot)+'</td></tr>';
   s+='</tbody></table></div>';
+  s+='<div class="enbar"><button type="button" class="xd" id="en-reset">คืนค่าตามแผนทั้งหมด 恢复默认</button><span id="en-st" class="xs"></span></div>';
   document.getElementById('v-price').innerHTML=s;
+}
+
+/* ================= monthly revenue estimate page ================= */
+function revBuild(){
+  var mons=[],Y={b:0,a:0,mem:0,rev:0,ex:0},enr=0,miss=0,cards=0;
+  for(var m=1;m<=12;m++){
+    var b=0,a=0;
+    BUD[m].c.forEach(function(x){if(x[1]&&x[2]){var v=x[1]*x[2];enr+=x[2];if(C[x[0]][3]==='b')b+=v;else a+=v}else miss++});
+    var mem=MB[m-1],ex=baseEx(m)+(ADD[m]||0),rev=b+a+mem;cards+=mc(m)[0]+mc(m)[1];
+    mons.push({m:m,b:b,a:a,mem:mem,rev:rev,ex:ex,pr:rev-ex,mg:(rev-ex)/rev});
+    Y.b+=b;Y.a+=a;Y.mem+=mem;Y.rev+=rev;Y.ex+=ex;
+  }
+  Y.pr=Y.rev-Y.ex;
+  var best=mons.slice().sort(function(x,y){return y.rev-x.rev})[0],low=mons.slice().sort(function(x,y){return x.rev-y.rev})[0];
+  var s='<p class="pnote"><b>ประมาณการรายได้รายเดือน 月度收入预测</b> = ผู้เรียนแต่ละรอบ × ราคาต่อคน + รายได้บัตรสมาชิกตามแผน จำนวนผู้เรียนใช้ตามที่ตั้งไว้ในแท็บราคาขาย (แก้จำนวนผู้เรียนของแต่ละคลาสและจำนวนบัตรสมาชิกที่ขายได้ในแต่ละเดือนได้ในการ์ดด้านล่าง (ตั้งต้นเดือนละ 30 ใบ: บัตร 3,999 บาท 10 ใบ + บัตร 1,999 บาท 20 ใบ) จำนวนผู้เรียนใช้ชุดเดียวกับแท็บราคาขาย หน้านี้และหน้าอื่นคำนวณใหม่ทันที) ค่าใช้จ่ายเทียบกับงบรายเดือน'+(miss?' · คลาสที่ยังไม่มีราคาหรือจำนวนผู้เรียน '+miss+' รอบ ยังไม่นับรายได้':'')+' <button type="button" class="xd" id="rv-go">ดูตารางรายรอบ</button></p>';
+  s+='<div class="sum"><div><b>'+f(Y.rev)+'</b><span>รายได้รวมทั้งปี 全年预计收入 (บาท)</span></div><div><b>'+f(Y.b+Y.a)+'</b><span>ค่าคอร์ส 课程收入 · '+f(enr)+' คน-รอบ</span></div><div><b>'+f(Y.mem)+'</b><span>บัตรสมาชิก 会员卡收入 · '+f(cards)+' ใบ</span></div><div><b>'+f(best.rev)+'</b><span>เดือนสูงสุด '+MNF[best.m-1]+' · ต่ำสุด '+MNF[low.m-1]+' '+f(low.rev)+'</span></div></div>';
+  /* stacked chart */
+  var W=720,H=300,l=48,r=8,t=26,bt=26,pw=W-l-r,ph=H-t-bt,mx=0;
+  mons.forEach(function(d){mx=Math.max(mx,d.rev,d.ex)});
+  var top=Math.ceil(mx/500000)*500000,y=function(v){return t+ph-v/top*ph},step=pw/12,bw=step*.58;
+  var g='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="ประมาณการรายได้รายเดือนแยกค่าคอร์สขั้นพื้นฐาน ขั้นสูง และบัตรสมาชิก เทียบค่าใช้จ่าย">';
+  for(var v=0;v<=top;v+=500000)g+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)"/><text x="'+(l-6)+'" y="'+(y(v)+4)+'" text-anchor="end">'+(v/1e6).toFixed(1)+'M</text>';
+  var line='';
+  mons.forEach(function(d,i){
+    var cx=l+step*i+step/2,x=cx-bw/2,acc=0;
+    [[d.b,'var(--c1)','ขั้นพื้นฐาน'],[d.a,'var(--c2)','ขั้นสูง'],[d.mem,'var(--t-mix)','บัตรสมาชิก']].forEach(function(sg){
+      if(sg[0]>0){g+='<rect x="'+x+'" y="'+y(acc+sg[0])+'" width="'+bw+'" height="'+(y(acc)-y(acc+sg[0]))+'" fill="'+sg[1]+'"><title>'+MNF[d.m-1]+' '+sg[2]+' '+f(sg[0])+'</title></rect>'}
+      acc+=sg[0];
+    });
+    g+='<text class="v" x="'+cx+'" y="'+(y(d.rev)-6)+'" text-anchor="middle">'+(d.rev/1e6).toFixed(2)+'</text><text x="'+cx+'" y="'+(H-8)+'" text-anchor="middle">'+MN[i]+'</text>';
+    line+=(i?'L':'M')+cx+' '+y(d.ex);
+  });
+  g+='<path d="'+line+'" fill="none" stroke="var(--fg)" stroke-width="2"/>';
+  mons.forEach(function(d,i){g+='<circle cx="'+(l+step*i+step/2)+'" cy="'+y(d.ex)+'" r="3.5" fill="var(--fg)" stroke="var(--card)" stroke-width="2"/>'});
+  g+='</svg>';
+  s+='<div class="rvc"><div class="rvl"><span><i style="background:var(--c1)"></i>ค่าคอร์สขั้นพื้นฐาน 基础</span><span><i style="background:var(--c2)"></i>ค่าคอร์สขั้นสูง 进阶</span><span><i style="background:var(--t-mix)"></i>บัตรสมาชิก 会员卡</span><span><i class="ln"></i>ค่าใช้จ่าย 成本</span><span>ตัวเลขเหนือแท่ง = รายได้รวม (ล้านบาท)</span></div>'+g+'</div>';
+  /* table */
+  s+='<h2 class="ph">สรุปรายเดือน <small>月度汇总</small></h2><div class="tw"><table class="pt" style="min-width:760px"><thead><tr><th>เดือน<small>月份</small></th><th>ค่าคอร์สพื้นฐาน<small>基础课程</small></th><th>ค่าคอร์สขั้นสูง<small>进阶课程</small></th><th>บัตรสมาชิก<small>会员卡</small></th><th>รายได้รวม<small>总收入</small></th><th>ค่าใช้จ่าย<small>成本</small></th><th>กำไรขั้นต้น<small>毛利</small></th><th>อัตรา<small>毛利率</small></th></tr></thead><tbody>';
+  mons.forEach(function(d){s+='<tr><td>'+MNF[d.m-1]+' '+d.m+'月</td><td>'+f(d.b)+'</td><td>'+f(d.a)+'</td><td>'+f(d.mem)+'</td><td class="big">'+f(d.rev)+'</td><td>'+f(d.ex)+'</td><td class="'+(d.pr<0?'neg':'')+'">'+f(d.pr)+'</td><td class="'+(d.pr<0?'neg':'')+'">'+pc(d.mg)+'</td></tr>'});
+  s+='<tr class="sumrow"><td>ทั้งปี 全年</td><td>'+f(Y.b)+'</td><td>'+f(Y.a)+'</td><td>'+f(Y.mem)+'</td><td class="big">'+f(Y.rev)+'</td><td>'+f(Y.ex)+'</td><td>'+f(Y.pr)+'</td><td>'+pc(Y.pr/Y.rev)+'</td></tr></tbody></table></div>';
+  /* per-month class breakdown */
+  s+='<h2 class="ph">รายได้และกำไรขาดทุนแต่ละคลาสในแต่ละเดือน <small>各月各班收入与盈亏</small></h2><p class="pnote">กำไรขาดทุนรายคลาสเป็นการ<b>ปันส่วน</b>ค่าใช้จ่ายของเดือน (รวมค่าใช้จ่ายเพิ่มเติม) ตามจำนวนวันเรียนของแต่ละคลาส เพราะค่าใช้จ่ายในไฟล์เป็นยอดรวมรายเดือน ไม่ได้แยกรายคลาส ส่วนรายได้บัตรสมาชิกไม่นำไปหักต้นทุนรายคลาส แต่รวมอยู่ในกำไรรวมของเดือน คลาสดัดร้อนขั้นสูงของอาจารย์หลี่ (Schroeder) (พ.ค. และ พ.ย.) ไม่นับรายได้และไม่ปันส่วนต้นทุน</p><div class="dg">';
+  mons.forEach(function(d){
+    var wd={},wt=0;
+    BUD[d.m].c.forEach(function(x){var rr=R.filter(function(q){return rid(q)===x[3]})[0];wd[x[3]]=rr?rr[2]-rr[1]+1:1;wt+=wd[x[3]]});
+    s+='<div class="dc"><div class="dh"><b>'+MNF[d.m-1]+' <span class="zh">'+d.m+'月</span></b><span>รายได้ '+f(d.rev)+' · <span class="'+(d.pr<0?'neg':'')+'">'+(d.pr<0?'ขาดทุน ':'กำไร ')+f(Math.abs(d.pr))+'</span></span></div>';
+    BUD[d.m].c.forEach(function(x){
+      var run=R.filter(function(q){return rid(q)===x[3]})[0],dt=run?(run[1]===run[2]?run[1]:run[1]+'–'+run[2])+' '+MN[d.m-1]:'';
+      var dd=DEF[d.m].filter(function(q){return q[0]===x[0]})[0]||[],o=OV[x[3]]||{},lab=C[x[0]][0]+' '+dt;
+      var hin='<input class="en'+(o.hc!=null?' mod':'')+'" type="number" min="0" max="500" step="1" inputmode="numeric" data-id="'+x[3]+'" data-f="hc" value="'+(x[2]==null?'':x[2])+'" placeholder="คน" aria-label="จำนวนผู้เรียน '+lab+'">';
+      var pin=dd[1]==null?'<input class="en" type="number" min="0" step="100" inputmode="numeric" data-id="'+x[3]+'" data-f="p" value="'+(x[1]==null?'':x[1])+'" placeholder="ราคา" aria-label="ราคาต่อคน '+lab+'">':f(x[1]);
+      s+='<div class="ir ire"><span>'+ico(x[0])+C[x[0]][0]+' <span class="zh">'+dt+'</span></span><span>'+hin+' × '+pin+' = <b>'+(x[1]&&x[2]?f(x[1]*x[2]):'—')+'</b></span></div>';
+      var cv=x[1]&&x[2]?x[1]*x[2]:0,cc=wt?Math.round(d.ex*wd[x[3]]/wt):0,cpf=cv-cc;
+      s+='<div class="cpl"><span>ต้นทุนปันส่วน '+f(cc)+' ('+wd[x[3]]+' วัน)</span><span>'+(x[1]&&x[2]?(cpf<0?'ขาดทุน':'กำไร')+' <b class="'+(cpf<0?'neg':'pos')+'">'+f(Math.abs(cpf))+'</b> ('+pc(cpf/cv)+')':'<b>ไม่มีรายได้ที่ตั้งไว้ → ขาดทุน '+f(cc)+'</b>')+'</span></div>';
+    });
+    var kk=mc(d.m),mo=OV['mem-'+d.m]||{};
+    s+='<div class="ir"><span>บัตรสมาชิก <span class="zh">会员卡</span> <small>(ไม่ปันส่วนต้นทุน)</small></span><span><b>'+f(d.mem)+'</b></span></div>';
+    [['c1',3999,kk[0]],['c2',1999,kk[1]]].forEach(function(cd){
+      s+='<div class="ir ire"><span class="na">บัตร '+f(cd[1])+' บาท</span><span><input class="en'+(mo[cd[0]]!=null?' mod':'')+'" type="number" min="0" max="2000" step="1" inputmode="numeric" data-id="mem-'+d.m+'" data-f="'+cd[0]+'" value="'+cd[2]+'" aria-label="จำนวนบัตร '+f(cd[1])+' บาท '+MNF[d.m-1]+'"> ใบ</span></div>';
+    });
+    s+='<div class="ir"><span><b>รวมเดือน</b> รายได้ '+f(d.rev)+' − ค่าใช้จ่าย '+f(d.ex)+'</span><span><b class="'+(d.pr<0?'neg':'pos')+'">'+(d.pr<0?'ขาดทุน ':'กำไร ')+f(Math.abs(d.pr))+'</b> ('+pc(d.mg)+')</span></div></div>';
+  });
+  s+='</div><div class="enbar"><button type="button" class="xd" id="rv-reset">คืนค่าตามแผนทั้งหมด 恢复默认</button><span id="rv-st" class="xs"></span></div>';
+  document.getElementById('v-rev').innerHTML=s;
+  var go=document.getElementById('rv-go');if(go)go.onclick=function(){setView('p');window.scrollTo(0,0)};
 }
 
 /* ================= expenses page ================= */
@@ -597,11 +753,47 @@ function expDyn(){
   s+='</tbody></table></div></details>';
   document.getElementById('exp-dyn').innerHTML=s;
 }
+/* ===== editable headcounts (shared through the db collection 'enroll') ===== */
+var ecoll=null,enBusy=false;
+function enst(t){['en-st','rv-st'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=t||''})}
+function refreshAll(){
+  var ae=document.activeElement,host=ae&&ae.closest?ae.closest('#v-price,#v-rev'):null,keep=host&&ae.getAttribute('data-id')?[host.id,ae.getAttribute('data-id'),ae.getAttribute('data-f')]:null;
+  rebuild();priceBuild();revBuild();expDyn();execBuild();
+  if(keep){var el=document.querySelector('#'+keep[0]+' input[data-id="'+keep[1]+'"][data-f="'+keep[2]+'"]');if(el)el.focus()}
+}
+function enSave(id){
+  var o=OV[id];
+  if(!ecoll){enst('ค่านี้ใช้ได้เฉพาะในหน้านี้ ยังไม่ได้บันทึกถาวร');return}
+  var d=ecoll.doc(id),pr=o?d.set(Object.assign({id:id,ts:Date.now()},o)):d.delete();
+  Promise.resolve(pr).then(function(){enst('บันทึกแล้ว')}).catch(function(){enst('บันทึกไม่สำเร็จ (บัญชีนี้อาจดูได้อย่างเดียว) ค่าที่แก้ใช้ได้เฉพาะในหน้านี้')});
+}
+function enChange(ev){
+  var t=ev.target;if(!(t&&t.getAttribute&&t.getAttribute('data-id')))return;
+  var id=t.getAttribute('data-id'),fl=t.getAttribute('data-f'),v=t.value.trim(),n=parseFloat(v);
+  var o=Object.assign({},OV[id]||{});
+  if(v===''||!(n>=0))delete o[fl];else o[fl]=Math.round(n);
+  if(o.hc==null&&o.p==null&&o.c1==null&&o.c2==null)delete OV[id];else OV[id]=o;
+  enSave(id);
+  setTimeout(refreshAll,0);
+}
+function enClick(ev){
+  var b=ev.target.closest&&ev.target.closest('#en-reset,#rv-reset');if(!b)return;
+  if(!b.classList.contains('arm')){b.classList.add('arm');b.textContent='ยืนยันคืนค่า 确认';setTimeout(function(){if(b.isConnected){b.classList.remove('arm');b.textContent='คืนค่าตามแผนทั้งหมด 恢复默认'}},4000);return}
+  var ids=Object.keys(OV);OV={};ids.forEach(function(id){if(ecoll)ecoll.doc(id).delete().catch(function(){})});
+  enst(ids.length?'คืนค่าตามแผนแล้ว':'ไม่มีค่าที่แก้ไว้');refreshAll();
+}
+['v-price','v-rev'].forEach(function(id){var e=document.getElementById(id);e.addEventListener('change',enChange);e.addEventListener('click',enClick)});
+
 function startDb(){
   if(!(window.claude&&claude.use)){setWritable(false,'บันทึกรายการเพิ่มเติมไม่ได้ในมุมมองนี้');return}
   setWritable(false,'กำลังเชื่อมต่อที่เก็บข้อมูล…');
   claude.use('db').then(function(db){
     if(!db){setWritable(false,'ต้องเข้าสู่ระบบจึงจะเพิ่มและดูรายการเพิ่มเติมได้');return}
+    ecoll=db.collection('enroll');
+    ecoll.orderBy('ts').onSnapshot(function(snap){
+      OV={};snap.docs.forEach(function(d){var o=d.data()||{};if(!o.id)return;var x={};['hc','p','c1','c2'].forEach(function(k){if(typeof o[k]==='number')x[k]=o[k]});if(Object.keys(x).length)OV[o.id]=x});
+      refreshAll();
+    },function(){});
     coll=db.collection('expenses');
     coll.orderBy('ts').onSnapshot(function(snap){
       EXPS=snap.docs.map(function(d){var o=d.data()||{};o.id=d.id;return o}).filter(function(o){return o.m>=1&&o.m<=12});
@@ -618,30 +810,30 @@ function startDb(){
 
 /* ================= tabs ================= */
 function setView(v){
-  ['s','p','e','x'].forEach(function(x){
-    document.getElementById({s:'v-sched',p:'v-price',e:'v-exp',x:'v-exec'}[x]).hidden=v!==x;
+  ['s','p','r','e','x'].forEach(function(x){
+    document.getElementById({s:'v-sched',p:'v-price',r:'v-rev',e:'v-exp',x:'v-exec'}[x]).hidden=v!==x;
     document.getElementById('tab-'+x).setAttribute('aria-pressed',String(v===x));
   });
 }
-['s','p','e','x'].forEach(function(x){document.getElementById('tab-'+x).onclick=function(){setView(x)}});
+['s','p','r','e','x'].forEach(function(x){document.getElementById('tab-'+x).onclick=function(){setView(x)}});
 function execBuild(){
 function M(n){return (n/1e6).toFixed(2)+' ล้าน'}
 // ---- derived numbers ----
 var mon=[],Y={cr:0,rev:0,ex:0};
 for(var m=1;m<=12;m++){
   var b=BUD[m],cr=0;b.c.forEach(function(x){cr+=x[1]*x[2]});
-  var ex=b.e.reduce(function(a,c){return a+c},0),rev=cr+MEMBER;
+  var ex=b.e.reduce(function(a,c){return a+c},0),rev=cr+MB[m-1];
   mon.push({m:m,cr:cr,rev:rev,ex:ex,pr:rev-ex,mg:(rev-ex)/rev});
   Y.cr+=cr;Y.rev+=rev;Y.ex+=ex;
 }
 Y.pr=Y.rev-Y.ex;Y.mg=Y.pr/Y.rev;
-var rounds=R.filter(function(r){return r[3]!=='ho'});
+var rounds=RB.filter(function(r){return r[3]!=='ho'});
 var enrol=0;rounds.forEach(function(r){var x=BUD[r[0]].c.filter(function(c){return c[0]===r[3]})[0];enrol+=x[2]});
 var best=mon.slice().sort(function(a,b){return b.mg-a.mg})[0],worst=mon.slice().sort(function(a,b){return a.mg-b.mg})[0];
-var prices=[];for(var mm=1;mm<=12;mm++)BUD[mm].c.forEach(function(c){prices.push(c[1])});
+var prices=[];for(var mm=1;mm<=12;mm++)BUD[mm].c.forEach(function(c){if(c[1])prices.push(c[1])});
 var pmin=Math.min.apply(null,prices),pmax=Math.max.apply(null,prices);
 
-document.getElementById('e-subtitle').textContent=rounds.length+' รอบ · 10 หลักสูตร · ผู้เรียนตามแผน '+f(enrol)+' คน-รอบ · ราคาต่อคน '+f(pmin)+'–'+f(pmax)+' บาท';
+document.getElementById('e-subtitle').textContent=rounds.length+' รอบ · '+Object.keys(rounds.reduce(function(a,r){a[r[3]]=1;return a},{})).length+' หลักสูตรที่มีราคา · ผู้เรียนตามแผน '+f(enrol)+' คน-รอบ · ราคาต่อคน '+f(pmin)+'–'+f(pmax)+' บาท';
 
 // ---- KPIs ----
 document.getElementById('e-kpis').innerHTML=
@@ -653,10 +845,12 @@ document.getElementById('e-kpis').innerHTML=
 // ---- 3 messages ----
 var staff=0;for(var q=1;q<=12;q++)staff+=BUD[q].e[3];
 var cb=0,ca=0;rounds.forEach(function(r){var x=BUD[r[0]].c.filter(function(c){return c[0]===r[3]})[0];if(C[r[3]][3]==='b')cb+=x[1]*x[2];else ca+=x[1]*x[2]});
-var be=(Y.ex-12*MEMBER)/Y.cr;
+var be=(Y.ex-MEMY)/Y.cr;
 document.getElementById('e-msgs').innerHTML=
- '<li><b>ทุกเดือนมีกำไรขั้นต้น</b> ตั้งแต่ '+pc(worst.mg)+' ('+MNF[worst.m-1]+') ถึง '+pc(best.mg)+' ('+MNF[best.m-1]+') เดือนที่ได้น้อยคือเดือนที่เปิดคอร์สน้อยหรือมีวันหยุด</li>'+
- '<li><b>ค่าใช้จ่ายเกือบคงที่ทุกเดือน</b> ประมาณ 1.17 ล้านบาท บุคลากรเป็นก้อนใหญ่สุด '+pc(staff/Y.ex)+' ของค่าใช้จ่ายทั้งปี กำไรจึงขึ้นกับว่าเปิดคอร์สและรับผู้เรียนได้ตามแผนหรือไม่</li>'+
+ (mon.filter(function(d){return d.pr<0}).length?
+  '<li><b>ขาดทุนขั้นต้น '+mon.filter(function(d){return d.pr<0}).map(function(d){return MNF[d.m-1]}).join(', ')+'</b> เดือนที่ต่ำสุดคือ'+MNF[worst.m-1]+' '+(worst.pr<0?'ขาดทุน '+f(-worst.pr):'กำไร '+f(worst.pr))+' บาท ('+pc(worst.mg)+') เพราะรายได้ค่าคอร์สต่ำกว่าค่าใช้จ่ายเดือนละ '+f(worst.ex)+' บาท เดือนที่ดีที่สุดคือ'+MNF[best.m-1]+' ('+pc(best.mg)+')</li>':
+  '<li><b>ทุกเดือนมีกำไรขั้นต้น</b> ตั้งแต่ '+pc(worst.mg)+' ('+MNF[worst.m-1]+') ถึง '+pc(best.mg)+' ('+MNF[best.m-1]+')</li>')+
+ '<li><b>ค่าใช้จ่ายเท่ากันทุกเดือน</b> เดือนละ '+f(baseEx(1))+' บาท (ใช้งบเดือน ม.ค. เป็นต้นแบบ) บุคลากรเป็นก้อนใหญ่สุด '+pc(staff/Y.ex)+' ของค่าใช้จ่ายทั้งปี กำไรจึงขึ้นกับว่าเปิดคอร์สและรับผู้เรียนได้ตามแผนหรือไม่</li>'+
  '<li><b>รายได้ค่าคอร์ส'+(ca>cb?'ขั้นสูง':'ขั้นพื้นฐาน')+'มากกว่า</b> ('+pc(Math.max(ca,cb)/Y.cr)+' '+(ca>cb?'ขั้นสูง':'ขั้นพื้นฐาน')+' และ '+pc(Math.min(ca,cb)/Y.cr)+' '+(ca>cb?'ขั้นพื้นฐาน':'ขั้นสูง')+') และจะถึงจุดคุ้มทุนเมื่อมีผู้เรียนราว '+Math.round(be*100)+'% ของแผน</li>';
 
 // ---- tooltip ----
@@ -697,8 +891,8 @@ function chart1(){
     h.addEventListener('pointerleave',hideTip);
   });
   var t1='<table><thead><tr><th>เดือน</th><th>รายได้ค่าคอร์ส</th><th>บัตรสมาชิก</th><th>รายได้รวม</th><th>ค่าใช้จ่ายรวม</th><th>กำไรขั้นต้น</th><th>อัตรากำไร</th></tr></thead><tbody>';
-  mon.forEach(function(d){t1+='<tr><td>'+MNF[d.m-1]+'</td><td>'+f(d.cr)+'</td><td>'+f(MEMBER)+'</td><td>'+f(d.rev)+'</td><td>'+f(d.ex)+'</td><td>'+f(d.pr)+'</td><td>'+pc(d.mg)+'</td></tr>'});
-  t1+='<tr><th>ทั้งปี</th><th>'+f(Y.cr)+'</th><th>'+f(12*MEMBER)+'</th><th>'+f(Y.rev)+'</th><th>'+f(Y.ex)+'</th><th>'+f(Y.pr)+'</th><th>'+pc(Y.mg)+'</th></tr></tbody></table>';
+  mon.forEach(function(d){t1+='<tr><td>'+MNF[d.m-1]+'</td><td>'+f(d.cr)+'</td><td>'+f(MB[d.m-1])+'</td><td>'+f(d.rev)+'</td><td>'+f(d.ex)+'</td><td>'+f(d.pr)+'</td><td>'+pc(d.mg)+'</td></tr>'});
+  t1+='<tr><th>ทั้งปี</th><th>'+f(Y.cr)+'</th><th>'+f(MEMY)+'</th><th>'+f(Y.rev)+'</th><th>'+f(Y.ex)+'</th><th>'+f(Y.pr)+'</th><th>'+pc(Y.mg)+'</th></tr></tbody></table>';
   document.getElementById('e-t1').innerHTML=t1;
 }
 chart1();
@@ -725,6 +919,7 @@ for(var mo=1;mo<=12;mo++){
   R.filter(function(r){return r[0]===mo}).forEach(function(r){
     var d=dim(mo),left=(r[1]-1)/d*100,w=(r[2]-r[1]+1)/d*100,k=r[3];
     if(k==='ho'){g+='<div class="gb ho" style="left:'+left+'%;width:'+w+'%" title="'+r[4]+' '+r[1]+' '+MN[mo-1]+'"></div>'}
+    else if(k==='nt'){g+='<div class="gb nt" style="left:'+left+'%;width:'+w+'%" title="'+r[5]+' · '+r[1]+'–'+r[2]+' '+MN[mo-1]+'">'+r[5]+'</div>'}
     else{var lv=C[k][3];g+='<div class="gb" style="--c:var(--'+(lv==='b'?'c1':'c2')+');left:'+left+'%;width:'+w+'%" title="'+C[k][0]+' · '+r[1]+'–'+r[2]+' '+MN[mo-1]+' ('+(r[2]-r[1]+1)+' วัน)">'+C[k][0]+'</div>'}
   });
   g+='</div></div>';
@@ -735,24 +930,26 @@ document.getElementById('e-gantt').innerHTML=g;
 function sens(){
   var s=+document.getElementById('e-sens').value/100;
   document.getElementById('e-sensv').textContent=Math.round(s*100)+'%';
-  var rev=Y.cr*s+12*MEMBER,pr=rev-Y.ex,mg=pr/rev;
+  var rev=Y.cr*s+MEMY,pr=rev-Y.ex,mg=pr/rev;
   document.getElementById('e-res').innerHTML=
    '<div><b>'+M(rev)+'</b><span>รายได้รวม</span></div><div><b class="'+(pr<0?'neg':'pos')+'">'+(pr<0?'−':'')+M(Math.abs(pr))+'</b><span>กำไรขั้นต้น</span></div><div><b>'+pc(mg)+'</b><span>อัตรากำไรขั้นต้น</span></div>';
   document.getElementById('e-be').textContent='จุดคุ้มทุนอยู่ที่ผู้เรียนประมาณ '+(be*100).toFixed(0)+'% ของแผน (รายได้เท่าค่าใช้จ่าย '+f(Y.ex)+' บาท)';
 }
-document.getElementById('e-sens').addEventListener('input',sens);sens();
+var sl0=document.getElementById('e-sens');if(!sl0._b){sl0._b=1;sl0.addEventListener('input',sens)}sens();
 
 // ---- watch list ----
-var octFix=40*(16800-12800),octRev=mon[9].rev-octFix,octPr=octRev-mon[9].ex;
+var cardsY=0;for(var cq=1;cq<=12;cq++)cardsY+=mc(cq)[0]+mc(cq)[1];
+var oh=BUD[10].c.filter(function(c){return c[0]==='hp'})[0]||[0,12800,0],ahL=R.filter(function(r){return r[3]==='ah'}).map(function(r){return r[1]+(r[1]!==r[2]?'–'+r[2]:'')+' '+MN[r[0]-1]}),ahMiss=ahL.length>0;var octFix=oh[2]*(oh[1]-12800),octRev=mon[9].rev-octFix,octPr=octRev-mon[9].ex;
 document.getElementById('e-watch').innerHTML=
+ '<li><span class="tag hi">สมมติฐาน</span><div><b>จำนวนผู้เรียนเป็นค่าประมาณ</b> ราคาตามรายการราคาในไฟล์ จำนวนผู้เรียนตามแผนในไฟล์ (คลาสที่ย้ายเข้ามาใช้จำนวนของคลาสที่ถูกแทนในเดือนเดียวกัน) แก้จำนวนผู้เรียนจริงรายรอบได้ที่แท็บราคาขาย ตัวเลขในหน้านี้จะคำนวณใหม่ตาม</div></li>'+
+ (ahMiss?'<li><span class="tag">หมายเหตุ</span><div><b>คลาสดัดร้อนขั้นสูงของอาจารย์หลี่ (Schroeder)</b> ('+ahL.join(' และ ')+') เป็นคลาสของ Schroeder เอง ไม่นับรายได้และไม่ปันส่วนต้นทุนในประมาณการนี้</div></li>':'')+
  '<li><span class="tag hi">ตรวจสอบ</span><div><b>ราคาดัดร้อนพื้นฐานเดือนตุลาคม</b> ในไฟล์เป็น 16,800 บาท เดือนอื่นเป็น 12,800 บาท ถ้าที่ถูกคือ 12,800 รายได้เดือนตุลาคมลดลง '+f(octFix)+' บาท กำไรเหลือ '+f(octPr)+' บาท ('+pc(octPr/octRev)+') และกำไรทั้งปีลดเหลือ '+M(Y.pr-octFix)+' บาท</div></li>'+
  '<li><span class="tag hi">ขาดข้อมูล</span><div><b>ภาษีธุรกิจยังไม่อยู่ในงบ</b> ช่อง 营业税 ในไฟล์ว่างทุกเดือน ตัวเลขกำไรจึงยังไม่หักภาษี</div></li>'+
- '<li><span class="tag">สมมติฐาน</span><div><b>ผู้เรียนเต็มตามแผนทุกรอบ</b> ('+f(enrol)+' คน-รอบ) และบัตรสมาชิกขายได้ '+f(MEMBER)+' บาทต่อเดือนทุกเดือน ถ้าไม่เป็นตามนี้ ใช้แถบเลื่อนด้านบนดูผล</div></li>'+
- '<li><span class="tag">สมมติฐาน</span><div><b>ค่าใช้จ่ายเป็นตัวเลขตามแผนคงที่</b> ค่าสอนอาจารย์และต้นทุนคอร์สไม่ได้ปรับตามจำนวนผู้เรียนจริง</div></li>'+
- '<li><span class="tag">ข้อสังเกต</span><div><b>เดือนกุมภาพันธ์และตุลาคม</b> มีวันหยุดตรุษจีนและวันชาติจีน เดือนตุลาคมมีเพียง 2 หลักสูตร กำไรจึงต่ำสุด ('+pc(mon[9].mg)+')</div></li>'+
+ '<li><span class="tag">สมมติฐาน</span><div><b>ผู้เรียนตามแผน '+f(enrol)+' คน-รอบ</b> และบัตรสมาชิกขายได้รวม '+f(cardsY)+' ใบทั้งปี (ตั้งต้นเดือนละ 30 ใบตามเดือน ม.ค.: บัตร 3,999 บาท 10 ใบ + บัตร 1,999 บาท 20 ใบ) แก้จำนวนบัตรได้ที่แท็บประมาณการรายได้ ถ้าไม่เป็นตามนี้ แก้จำนวนผู้เรียนที่แท็บราคาขาย หรือใช้แถบเลื่อนด้านบนดูผลรวม</div></li>'+
+ '<li><span class="tag">สมมติฐาน</span><div><b>ค่าใช้จ่ายทุกเดือนใช้งบเดือน ม.ค. เป็นต้นแบบ</b> ('+f(baseEx(1))+' บาทต่อเดือน) ค่าสอนอาจารย์และต้นทุนคอร์สไม่ได้ปรับตามจำนวนผู้เรียนหรือจำนวนคลาสจริง ช่วงจองเวลาบุคลากร 19–24 ม.ค. (Schroeder Thailand มีคลาสที่จีน) ไม่รวมค่าใช้จ่าย</div></li>'+
+ '<li><span class="tag">ข้อสังเกต</span><div><b>เดือนที่กำไรต่ำ</b> '+mon.slice().sort(function(a,b){return a.mg-b.mg}).slice(0,3).map(function(d){return MNF[d.m-1]+' ('+pc(d.mg)+')'}).join(', ')+' ส่วนใหญ่เป็นเดือนที่เปิดคลาสน้อยหรือรอบละไม่เต็มจำนวน</div></li>'+
  '<li><span class="tag">ข้อสังเกต</span><div><b>กำไรจริงรายเดือน</b> ในไฟล์ยังว่าง เมื่อเริ่มดำเนินการ ควรกรอกเพื่อเทียบกับแผน</div></li>';
 }
-execBuild();priceBuild();expInit();startDb();
+execBuild();priceBuild();revBuild();expInit();startDb();
 </script>
-
 </body></html>
